@@ -5,6 +5,8 @@ class Property < Square
     attr_accessor :owner
 
     def initialize(name:, price:, colour:, owner: nil)
+      raise ArgumentError, "price can't be nil" if price.nil?
+      raise ArgumentError, "colour can't be nil" if colour.nil?
         super(name: name, type: "property")
         @price = price
         @colour = colour
@@ -17,6 +19,14 @@ class Properties
 
     def initialize(properties: [])
         @properties = properties
+    end
+
+    def [](index)
+        @properties[index]
+    end
+
+    def length
+        @properties.length
     end
 
     def add_property(property)

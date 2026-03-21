@@ -22,6 +22,9 @@ class Square
   attr_reader :name, :type, :price, :colour
 
   def initialize(name:, type:, price: nil, colour: nil)
+    raise ArgumentError, "name can't be nil" if name.nil?
+    raise ArgumentError, "type can't be nil" if type.nil?
+
     @name = name
     @type = type
     @price = price

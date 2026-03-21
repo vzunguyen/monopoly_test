@@ -69,4 +69,12 @@ describe 'Square' do
   it 'initializes with only type returning error' do
     expect { Square.new(type: 'go') }.to raise_error(ArgumentError)
   end
+
+  it 'initializes with nil name returning error' do
+    expect { Square.new(name: nil, type: 'go') }.to raise_error(ArgumentError)
+  end
+
+  it 'initializes with nil type returning error' do
+    expect { Square.new(name: 'Go', type: nil) }.to raise_error(ArgumentError)
+  end
 end
