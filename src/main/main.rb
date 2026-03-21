@@ -1,11 +1,24 @@
 require 'json'
 require 'ostruct'
+require_relative 'board'
 
 def load_board(file_path)
   file_path = File.expand_path(file_path, __dir__)
   board_data = JSON.parse(File.read(file_path), object_class: OpenStruct)
 
-  return board_data
+  board = Board.new
+    for square in board_data
+            board.add_square(
+                Square.new(
+                    name: square.name,
+                    type: square.type,
+                    price: square.price,
+                    colour: square.colour
+                )
+            )
+    end
+
+    return board
 end
 
 def load_dice(file_path)
@@ -24,6 +37,7 @@ end
 board = load_board("../data/board.json")
 dice_data = load_dice("../data/rolls_1.json")
 
-for square in board do
-  puts "Square: #{square.name}, Type: #{square.type}"
+board.length.times do |index|
+    square = board[index]
+    puts "Square #{index}: #{square.name} (#{square.type})"
 end
