@@ -1,0 +1,72 @@
+require 'rspec/autorun'
+require_relative '../main/board'
+
+describe 'Board' do
+  it 'returns the correct square when added' do
+    board = Board.new
+    go_square = Square.new(name: 'Go', type: 'go')
+    chance_square = Square.new(name: 'Chance', type: 'chance')
+    board.add_square(go_square)
+    board.add_square(chance_square)
+    expect(board[0]).to eq(go_square)
+    expect(board[1]).to eq(chance_square)
+  end
+
+  it 'returns nil if added square is not found' do
+    board = Board.new
+    expect(board[0]).to eq(nil)
+  end
+
+  it 'returns the correct length' do
+    board = Board.new
+    board.add_square(Square.new(name: 'Go', type: 'go'))
+    board.add_square(Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown'))
+    board.add_square(Square.new(name: 'Community Chest', type: 'community_chest'))
+    expect(board.length).to eq(3)
+  end
+
+  it 'returns 0 if no squares are added' do
+    board = Board.new
+    expect(board.length).to eq(0)
+  end
+
+  it 'returns the correct square by index' do
+    board = Board.new
+    go_square = Square.new(name: 'Go', type: 'go')
+    med_ave_square = Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown')
+    community_chest_square = Square.new(name: 'Community Chest', type: 'community_chest')
+    board.add_square(go_square)
+    board.add_square(med_ave_square)
+    board.add_square(community_chest_square)
+
+    expect(board[0]).to eq(go_square)
+    expect(board[1]).to eq(med_ave_square)
+    expect(board[2]).to eq(community_chest_square)
+  end
+end
+
+describe 'Square' do
+  it 'initializes with the Go square returning only name and type' do
+    square = Square.new(name: 'Go', type: 'go')
+    expect(square.name).to eq('Go')
+    expect(square.type).to eq('go')
+    expect(square.price).to eq(nil)
+    expect(square.colour).to eq(nil)
+  end
+
+  it 'initializes with a property square returning name, type, price and colour' do
+    square = Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown')
+    expect(square.name).to eq('Mediterranean Avenue')
+    expect(square.type).to eq('property')
+    expect(square.price).to eq(60)
+    expect(square.colour).to eq('brown')
+  end
+
+  it 'initializes with only name returning error' do
+    expect { Square.new(name: 'Go') }.to raise_error(ArgumentError)
+  end
+
+  it 'initializes with only type returning error' do
+    expect { Square.new(type: 'go') }.to raise_error(ArgumentError)
+  end
+end
