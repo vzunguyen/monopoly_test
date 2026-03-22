@@ -2,46 +2,50 @@ require 'rspec/autorun'
 require_relative '../main/board'
 
 describe 'Board' do
-  it 'returns the correct square when added' do
-    board = Board.new
-    go_square = Square.new(name: 'Go', type: 'go')
-    chance_square = Square.new(name: 'Chance', type: 'chance')
-    board.add_square(go_square)
-    board.add_square(chance_square)
-    expect(board[0]).to eq(go_square)
-    expect(board[1]).to eq(chance_square)
-  end
+  describe '#add_square' do
+    it 'returns the correct square when added' do
+      board = Board.new
+      go_square = Square.new(name: 'Go', type: 'go')
+      chance_square = Square.new(name: 'Chance', type: 'chance')
+      board.add_square(go_square)
+      board.add_square(chance_square)
+      expect(board[0]).to eq(go_square)
+      expect(board[1]).to eq(chance_square)
+    end
 
-  it 'returns nil if added square is not found' do
-    board = Board.new
-    expect(board[0]).to eq(nil)
-  end
+    it 'returns nil if added square is not found' do
+      board = Board.new
+      expect(board[0]).to eq(nil)
+    end
 
-  it 'returns the correct length' do
-    board = Board.new
-    board.add_square(Square.new(name: 'Go', type: 'go'))
-    board.add_square(Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown'))
-    board.add_square(Square.new(name: 'Community Chest', type: 'community_chest'))
-    expect(board.length).to eq(3)
-  end
+    it 'returns the correct length' do
+      board = Board.new
+      board.add_square(Square.new(name: 'Go', type: 'go'))
+      board.add_square(Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown'))
+      board.add_square(Square.new(name: 'Community Chest', type: 'community_chest'))
+      expect(board.length).to eq(3)
+    end
 
-  it 'returns 0 if no squares are added' do
-    board = Board.new
-    expect(board.length).to eq(0)
-  end
+    it 'returns 0 if no squares are added' do
+      board = Board.new
+      expect(board.length).to eq(0)
+    end
 
-  it 'returns the correct square by index' do
-    board = Board.new
-    go_square = Square.new(name: 'Go', type: 'go')
-    med_ave_square = Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown')
-    community_chest_square = Square.new(name: 'Community Chest', type: 'community_chest')
-    board.add_square(go_square)
-    board.add_square(med_ave_square)
-    board.add_square(community_chest_square)
+    describe '#to_property' do
+      it 'converts a property square to a Property object' do
+        square = Square.new(name: 'Boardwalk', type: 'property', price: 400, colour: 'dark blue')
+        property = square.to_property
+        expect(property).to be_a(Property)
+        expect(property.name).to eq('Boardwalk')
+        expect(property.price).to eq(400)
+        expect(property.colour).to eq('dark blue')
+      end
 
-    expect(board[0]).to eq(go_square)
-    expect(board[1]).to eq(med_ave_square)
-    expect(board[2]).to eq(community_chest_square)
+      it 'raises an error when trying to convert a non-property square' do
+        square = Square.new(name: 'Go', type: 'go')
+        expect { square.to_property }.to raise_error(RuntimeError)
+      end
+    end
   end
 end
 
