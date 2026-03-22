@@ -62,6 +62,9 @@ dice.length.times do
   current_player.buy_property(board[current_player.position]) if board[current_player.position].is_property?
   puts "DEBUG: #{current_player.name} has $#{current_player.money} remaining"
 
+  # PAY RENT
+  current_player.pay_rent(board[current_player.position]) if board[current_player.position].is_property?
+
   turn_index += 1
 end
 

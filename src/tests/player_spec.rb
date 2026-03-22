@@ -43,7 +43,7 @@ describe 'Player' do
     it 'buys property if player has enough money' do
       player = Player.new(name: 'Bob')
       broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
-      
+
       expect(player.buy_property(broadwalk_property)).to eq(true)
       expect(broadwalk_property.owner).to eq(player)
     end
@@ -62,6 +62,38 @@ describe 'Player' do
 
       expect(player.buy_property(expensive_property)).to eq(false)
       expect(expensive_property.owner).to be_nil
+    end
+  end
+
+  describe '#pay_rent' do
+    it 'pays rent to property owner when landing on owned property' do
+      player1 = Player.new(name: 'Bob')
+      player2 = Player.new(name: 'Alice')
+      broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
+
+      player1.buy_property(broadwalk_property) # Bob buys Boardwalk for $4, remaining money: $12
+      player2.pay_rent(broadwalk_property)
+
+      expect(player2.money).to eq(12)
+      expect(player1.money).to eq(16)
+    end
+
+    it 'does not pay rent if property is not owned' do
+      player = Player.new(name: 'Bob')
+      unowned_property = Property.new(name: 'Park Place', price: 20, colour: 'dark blue')
+
+      player.pay_rent(unowned_property)
+      expect(player.money).to eq(16)
+    end
+
+    it 'does not pay rent if landing on self-owned property' do
+      player = Player.new(name: 'Bob')
+      broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
+
+      player.buy_property(broadwalk_property)
+      player.pay_rent(broadwalk_property)
+
+      expect(player.money).to eq(12)
     end
   end
 end

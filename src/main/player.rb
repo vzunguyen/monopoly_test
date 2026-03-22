@@ -1,5 +1,8 @@
+require_relative 'property'
+
 class Player
-    attr_reader :name, :position, :money
+    attr_reader :name, :position 
+    attr_accessor :money
 
     def initialize(name:, position: 0, money: 16)
         @name = name
@@ -33,10 +36,14 @@ class Player
 
     def pay_rent(property)
         if property.is_owned? && !property.is_owned_by?(self)
-            rent = property.price / 10
+            rent = property.price
             @money -= rent
-            property.owner.money += rent
-            puts "DEBUG: #{name} paid $#{rent} in rent to #{property.owner.name} for landing on #{property.name}. Remaining money: $#{@money}"
+            property.owner.money += rent # TODO: Maybe add a method to Property to handle rent payment and ownership transfer logic instead of directly modifying the owner's money here
+            puts "PAY RENT: #{name} paid $#{rent}. #{property.owner.name}: $#{property.owner.money}. #{name}: $#{@money}."
         end
     end
+
+    # def is_bankrupt?
+    #     @money < 0
+    # end
 end
