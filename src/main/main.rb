@@ -65,6 +65,15 @@ dice.length.times do
   # PAY RENT
   current_player.pay_rent(board[current_player.position]) if board[current_player.position].is_property?
 
+  # END GAME IF BANKRUPTCY
+  if current_player.is_bankrupt?
+    puts "GAME OVER: #{current_player.name} is bankrupt!"
+    puts "DEBUG: Final state of players:"
+    players.each { |player| puts "#{player.name}: $#{player.money}" }
+    players.each { |player| puts "#{player.name} on position #{player.position} (#{board[player.position].name})" }
+    break
+  end
+  
   turn_index += 1
 end
 
