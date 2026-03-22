@@ -9,6 +9,11 @@ class Player
     
     def move(steps, board)
         @position = (@position + steps) % board.length
+
+        if @position < steps
+            @money += 1
+            puts "DEBUG: #{name} passed 'Go' and collected $1. Total money: $#{@money}"
+        end
     end
 
     def buy_property(property)
@@ -23,6 +28,15 @@ class Player
         else
             puts "DEBUG: #{name} does not have enough money to buy #{property.name}. Required: $#{property.price}, Available: $#{@money}"
             return false
+        end
+    end
+
+    def pay_rent(property)
+        if property.is_owned? && !property.is_owned_by?(self)
+            rent = property.price / 10
+            @money -= rent
+            property.owner.money += rent
+            puts "DEBUG: #{name} paid $#{rent} in rent to #{property.owner.name} for landing on #{property.name}. Remaining money: $#{@money}"
         end
     end
 end
