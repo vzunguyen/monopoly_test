@@ -12,6 +12,14 @@ class Property < Square
         @colour = colour
         @owner = owner
     end
+
+    def is_owned?
+        !@owner.nil?
+    end
+
+    def is_owned_by?(player)
+        @owner == player
+    end
 end
 
 class Properties

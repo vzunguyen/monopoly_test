@@ -59,9 +59,8 @@ dice.length.times do
   puts "DEBUG: #{current_player.name} moved to position #{current_player.position} (#{board[current_player.position].name})"
 
   # BUY PROPERTY
-  current_player.buy_property(board[current_player.position].to_property) if board[current_player.position].is_property?
+  current_player.buy_property(board[current_player.position]) if board[current_player.position].is_property?
   puts "DEBUG: #{current_player.name} has $#{current_player.money} remaining"
-
 
   turn_index += 1
 end

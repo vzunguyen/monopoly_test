@@ -14,7 +14,11 @@ class Board
   end
 
   def add_square(square)
-    @squares << square
+    if square.type == 'property'
+      @squares << square.to_property
+    else
+      @squares << square
+    end
   end
 end
 
