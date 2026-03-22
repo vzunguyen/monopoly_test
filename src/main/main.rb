@@ -1,6 +1,17 @@
 require 'json'
 require 'ostruct'
+require_relative 'player'
 require_relative 'board'
+
+# Initialise players
+players = [
+    Player.new(name: "Peter"),
+    Player.new(name: "Billy"),
+    Player.new(name: "Charlotte"),
+    Player.new(name: "Sweedal")
+]
+
+players.each { |player| puts "DEBUG: #{player.inspect}" }
 
 def load_board(file_path)
   file_path = File.expand_path(file_path, __dir__)
@@ -35,9 +46,14 @@ end
 
 # GAME LOOP
 board = load_board("../data/board.json")
-dice_data = load_dice("../data/rolls_1.json")
+dice = load_dice("../data/rolls_1.json")
 
-board.length.times do |index|
-    square = board[index]
-    puts "Square #{index}: #{square.name} (#{square.type})"
+turn_index = 0
+dice.length.times do
+  current_player = players[turn_index % players.length]
+  steps = dice[turn_index]
+  current_player.move(steps, board)
+  puts "DEBUG: #{current_player.name} moved to position #{current_player.position} (#{board[current_player.position].name})"
+  turn_index += 1
 end
+
