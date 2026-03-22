@@ -96,4 +96,19 @@ describe 'Player' do
       expect(player.money).to eq(12)
     end
   end
+
+  describe '#is_bankrupt?' do
+    it 'returns true if player has negative money' do
+      player = Player.new(name: 'Bob', money: -1)
+      expect(player.is_bankrupt?).to eq(true)
+    end
+
+    it 'returns false if player has zero or positive money' do
+      player = Player.new(name: 'Bob', money: 0)
+      expect(player.is_bankrupt?).to eq(false)
+
+      player.money = 10
+      expect(player.is_bankrupt?).to eq(false)
+    end
+  end
 end
