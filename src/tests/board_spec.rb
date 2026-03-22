@@ -50,36 +50,38 @@ describe 'Board' do
 end
 
 describe 'Square' do
-  it 'initializes with the Go square returning only name and type' do
-    square = Square.new(name: 'Go', type: 'go')
-    expect(square.name).to eq('Go')
-    expect(square.type).to eq('go')
-    expect(square.price).to eq(nil)
-    expect(square.colour).to eq(nil)
-  end
+  describe '#initialize' do
+    it 'initializes with the Go square returning only name and type' do
+      square = Square.new(name: 'Go', type: 'go')
+      expect(square.name).to eq('Go')
+      expect(square.type).to eq('go')
+      expect(square.price).to eq(nil)
+      expect(square.colour).to eq(nil)
+    end
 
-  it 'initializes with a property square returning name, type, price and colour' do
-    square = Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown')
-    expect(square.name).to eq('Mediterranean Avenue')
-    expect(square.type).to eq('property')
-    expect(square.price).to eq(60)
-    expect(square.colour).to eq('brown')
-  end
+    it 'initializes with a property square returning name, type, price and colour' do
+      square = Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown')
+      expect(square.name).to eq('Mediterranean Avenue')
+      expect(square.type).to eq('property')
+      expect(square.price).to eq(60)
+      expect(square.colour).to eq('brown')
+    end
 
-  it 'initializes with only name returning error' do
-    expect { Square.new(name: 'Go') }.to raise_error(ArgumentError)
-  end
+    it 'initializes with only name returning error' do
+      expect { Square.new(name: 'Go') }.to raise_error(ArgumentError)
+    end
 
-  it 'initializes with only type returning error' do
-    expect { Square.new(type: 'go') }.to raise_error(ArgumentError)
-  end
+    it 'initializes with only type returning error' do
+      expect { Square.new(type: 'go') }.to raise_error(ArgumentError)
+    end
 
-  it 'initializes with nil name returning error' do
-    expect { Square.new(name: nil, type: 'go') }.to raise_error(ArgumentError)
-  end
+    it 'initializes with nil name returning error' do
+      expect { Square.new(name: nil, type: 'go') }.to raise_error(ArgumentError)
+    end
 
-  it 'initializes with nil type returning error' do
-    expect { Square.new(name: 'Go', type: nil) }.to raise_error(ArgumentError)
+    it 'initializes with nil type returning error' do
+      expect { Square.new(name: 'Go', type: nil) }.to raise_error(ArgumentError)
+    end
   end
 
   describe '#is_property?' do
