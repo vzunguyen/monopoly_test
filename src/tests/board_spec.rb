@@ -77,4 +77,32 @@ describe 'Square' do
   it 'initializes with nil type returning error' do
     expect { Square.new(name: 'Go', type: nil) }.to raise_error(ArgumentError)
   end
+
+  describe '#is_property?' do
+    it 'returns true if square is a property' do
+      square = Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown')
+      expect(square.is_property?).to eq(true)
+    end
+
+    it 'returns false if square is not a property' do
+      square = Square.new(name: 'Go', type: 'go')
+      expect(square.is_property?).to eq(false)
+    end
+  end
+
+  describe '#to_property' do
+    it 'returns a Property object if square is a property' do
+      square = Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown')
+      property = square.to_property
+      expect(property).to be_a(Property)
+      expect(property.name).to eq('Mediterranean Avenue')
+      expect(property.price).to eq(60)
+      expect(property.colour).to eq('brown')
+    end
+
+    it 'raises error if square is not a property' do
+      square = Square.new(name: 'Go', type: 'go')
+      expect { square.to_property }.to raise_error(RuntimeError)
+    end
+  end
 end

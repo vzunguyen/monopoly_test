@@ -30,4 +30,16 @@ class Square
     @price = price
     @colour = colour
   end
+
+  def is_property?
+    @type == 'property'
+  end
+
+  def to_property
+    if is_property?
+      Property.new(name: @name, price: @price, colour: @colour)
+    else
+      raise "Square #{@name} is not a property and cannot be converted to a Property object."
+    end
+  end
 end
