@@ -1,6 +1,7 @@
 require 'rspec/autorun'
 require_relative '../main/player'
 require_relative '../main/board'
+require_relative '../main/property'
 
 describe 'Player' do
 
@@ -39,24 +40,25 @@ describe 'Player' do
   end
 
   describe '#buy_property' do
-    player = Player.new(name: 'Bob', money: 15)
-    property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
+    broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
+    expensive_property = Property.new(name: 'Park Place', price: 20, colour: 'dark blue')
 
     it 'buys property if player has enough money' do
-      expect(player.buy_property(property)).to eq(true)
-      expect(property.owner).to eq(player)
+      player = Player.new(name: 'Bob', money: 15)
+      expect(player.buy_property(broadwalk_property)).to eq(true)
+      expect(broadwalk_property.owner).to eq(player)
     end
 
     it 'gives player correct remaining money after buying property' do
-      player.buy_property(property)
+      player = Player.new(name: 'Bob', money: 15)
+      player.buy_property(broadwalk_property)
       expect(player.money).to eq(11)
     end
 
     it 'does not buy property if player does not have enough money' do
-      player = Player.new(name: 'Bob', money: 1)
-      property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
-      expect(player.buy_property(property)).to eq(false)
-      expect(property.owner).to be_nil
+      player = Player.new(name: 'Bob', money: 15)
+      expect(player.buy_property(expensive_property)).to eq(false)
+      expect(expensive_property.owner).to be_nil
     end
   end
 end
