@@ -1,15 +1,15 @@
 require_relative 'board'
 
 class Property < Square
-    attr_reader :name, :colour
-    attr_accessor :owner, :price
+    attr_reader :name, :colour, :price
+    attr_accessor :owner, :rent
 
-    def initialize(name:, price:, colour:, owner: nil)
+    def initialize(name:, price:, rent: (price.to_f / 2).round(1), colour:, owner: nil)
       raise ArgumentError, "price can't be nil" if price.nil?
       raise ArgumentError, "colour can't be nil" if colour.nil?
         super(name: name, type: "property")
-        @base_price = price
         @price = price
+        @rent = rent.to_f.round(1)
         @colour = colour
         @owner = owner
     end
