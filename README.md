@@ -29,6 +29,9 @@ To-be-put-in-later
 1. Installing RSpec: `gem install rspec`
 2. Double-check RSpec version by `gem exec rspec -v`
 3. To run all tests
-
    1. Quick run: `gem exec rspec src/tests/`
    2. To check with tests passed: `gem exec rspec src/tests/ -f d` (--format documentation)
+
+# Git Log History
+
+To-be-added
