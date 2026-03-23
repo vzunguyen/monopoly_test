@@ -3,6 +3,9 @@ require 'ostruct'
 require_relative 'player'
 require_relative 'board'
 require_relative 'property'
+require_relative 'game_event'
+
+game_event = GameEvent.new
 
 # Initialise players
 players = [
@@ -52,31 +55,30 @@ dice = load_dice("../data/rolls_1.json")
 turn_index = 0
 dice.length.times do
   current_player = players[turn_index % players.length]
-  current_square = board[current_player.position]
   
   steps = dice[turn_index]
 
+  puts "\n--- TURN #{current_player.name} ---"
+
   # MOVE PLAYER
   current_player.move(steps, board)
-  puts "DEBUG: #{current_player.name} moved to position #{current_player.position} (#{board[current_player.position].name})"
+    landed_square = board[current_player.position]
+    puts "MOVE: #{current_player.name} moved to position #{current_player.position} (#{landed_square.name})"
 
   # BUY PROPERTY
-  current_player.buy_property(current_square, board) if current_square.is_property?
-  puts "DEBUG: #{current_player.name} has $#{current_player.money} remaining"
+    current_player.buy_property(landed_square, board) if landed_square.is_property?
 
   # PAY RENT
-  current_player.pay_rent(current_square) if current_square.is_property?
+    current_player.pay_rent(landed_square) if landed_square.is_property?
 
   # END GAME IF BANKRUPTCY
-  # TODO: Consider having a game event check after each turn to handle end game conditions and other events instead of directly checking for bankruptcy here in the main game loop
   if current_player.is_bankrupt?
-    puts "GAME OVER: #{current_player.name} is bankrupt!"
-    puts "DEBUG: Final state of players:"
-    players.each { |player| puts "#{player.name}: $#{player.money}" }
-    players.each { |player| puts "#{player.name} on position #{player.position} (#{board[player.position].name})" }
+    puts "\n#{current_player.name} is bankrupt! Game over."
     break
   end
-  
+
   turn_index += 1
 end
+
+game_event.game_over_announcement(players)
 
