@@ -20,17 +20,19 @@ class Player
     end
 
     def buy_property(property, board)
+        return false if property.nil? || !property.is_property?
+
         if property.is_owned?
-            puts "CAN'T BUY #{property.name} (already owned by #{property.owner.name})"
+            puts "\nCAN'T BUY #{property.name} (already owned by #{property.owner.name})"
             return false
         elsif @money >= property.price
             @money -= property.price
             property.owner = self
             property.is_rent_doubled?(board) ? property.price *= 2 : property.price
-            puts "BUY: #{name} bought #{property.name} for $#{property.price}. Remaining money: $#{@money}"
+            puts "\nBUY: #{name} bought #{property.name} for $#{property.price}. Remaining money: $#{@money}"
             return true
         else
-            puts "DEBUG: #{name} does not have enough money to buy #{property.name}. Required: $#{property.price}, Available: $#{@money}"
+            puts "\nNOT ENOUGH MONEY: #{name} does not have enough money to buy #{property.name}. Required: $#{property.price}, Available: $#{@money}"
             return false
         end
     end
