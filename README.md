@@ -11,7 +11,13 @@
 
 To-be-put-in-later
 
-# Important Setup
+# Design Assumptions
+
+1. Player will not buy property when player do not have enough money.
+2. Player only go bankrupt when their money go under 0.
+3. Rent price (?)
+
+# How to run this application?
 
 ## Running program
 
