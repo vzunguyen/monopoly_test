@@ -1,7 +1,10 @@
 require 'rspec/autorun'
 require_relative '../main/property'
+require_relative '../main/board'
 
 describe 'Property' do
+  board = Board.new
+  
   it 'initializes with the correct name, price, and colour' do
     property = Property.new(name: 'Boardwalk', price: 400, colour: 'dark blue')
     expect(property.name).to eq('Boardwalk')
@@ -35,5 +38,30 @@ describe 'Property' do
 
   it 'returns error if initialized with nil colour' do
     expect { Property.new(name: 'Boardwalk', price: 400, colour: nil) }.to raise_error(ArgumentError)
+  end
+
+  # describe '#is_owned?' do
+    
+  # end
+
+  # describe '#is_owned_by?' do
+    
+  # end
+
+  describe '#is_rent_doubled?' do
+    it 'check monopoly and doubles rent if player has monopoly' do
+      player = Player.new(name: 'Bob')
+      property1 = Property.new(name: 'Park Place', price: 20, colour: 'dark blue')
+      property2 = Property.new(name: 'Boardwalk', price: 40, colour: 'dark blue')
+
+      board.add_square(property1)
+      board.add_square(property2)
+
+      player.buy_property(property1, board)
+      player.buy_property(property2, board)
+
+      expect(property1.is_rent_doubled?(board)).to eq(true)
+      expect(property2.is_rent_doubled?(board)).to eq(true)
+    end
   end
 end
