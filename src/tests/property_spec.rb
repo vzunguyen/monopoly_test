@@ -50,15 +50,19 @@ describe 'Property' do
 
   describe '#is_rent_doubled?' do
     it 'check monopoly and doubles rent if player has monopoly' do
-      player = Player.new(name: 'Bob')
+      owner = Player.new(name: 'Bob')
+      player = Player.new(name: 'Alice')
       property1 = Property.new(name: 'Park Place', price: 20, colour: 'dark blue')
       property2 = Property.new(name: 'Boardwalk', price: 40, colour: 'dark blue')
 
       board.add_square(property1)
       board.add_square(property2)
 
-      player.buy_property(property1, board)
-      player.buy_property(property2, board)
+      owner.buy_property(property1)
+      owner.buy_property(property2)
+
+      player.pay_rent(property1, board)
+      player.pay_rent(property2, board)
 
       expect(property1.is_rent_doubled?(board)).to eq(true)
       expect(property2.is_rent_doubled?(board)).to eq(true)

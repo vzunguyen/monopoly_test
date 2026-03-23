@@ -44,7 +44,7 @@ describe 'Player' do
       player = Player.new(name: 'Bob')
       broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
 
-      expect(player.buy_property(broadwalk_property, board)).to eq(true)
+      expect(player.buy_property(broadwalk_property)).to eq(true)
       expect(broadwalk_property.owner).to eq(player)
     end
 
@@ -52,7 +52,7 @@ describe 'Player' do
       player = Player.new(name: 'Bob')
       broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
 
-      player.buy_property(broadwalk_property, board)
+      player.buy_property(broadwalk_property)
       expect(player.money).to eq(12)
     end
 
@@ -60,7 +60,7 @@ describe 'Player' do
       player = Player.new(name: 'Bob', money: 15)
       expensive_property = Property.new(name: 'Park Place', price: 20, colour: 'dark blue')
 
-      expect(player.buy_property(expensive_property, board)).to eq(false)
+      expect(player.buy_property(expensive_property)).to eq(false)
       expect(expensive_property.owner).to be_nil
     end
   end
@@ -71,18 +71,18 @@ describe 'Player' do
       player2 = Player.new(name: 'Alice')
       broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
 
-      player1.buy_property(broadwalk_property, board) # Bob buys Boardwalk for $4, remaining money: $12
-      player2.pay_rent(broadwalk_property)
+      player1.buy_property(broadwalk_property)
+      player2.pay_rent(broadwalk_property, board) 
 
-      expect(player2.money).to eq(12)
-      expect(player1.money).to eq(16)
+      expect(player2.money).to eq(14)
+      expect(player1.money).to eq(14)
     end
 
     it 'does not pay rent if property is not owned' do
       player = Player.new(name: 'Bob')
       unowned_property = Property.new(name: 'Park Place', price: 20, colour: 'dark blue')
 
-      player.pay_rent(unowned_property)
+      player.pay_rent(unowned_property, board)
       expect(player.money).to eq(16)
     end
 
@@ -90,10 +90,28 @@ describe 'Player' do
       player = Player.new(name: 'Bob')
       broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
 
-      player.buy_property(broadwalk_property, board)
-      player.pay_rent(broadwalk_property)
+      player.buy_property(broadwalk_property)
+      player.pay_rent(broadwalk_property, board)
 
       expect(player.money).to eq(12)
+    end
+
+    it 'doubles rent if property is part of a monopoly' do
+      player1 = Player.new(name: 'Bob')
+      player2 = Player.new(name: 'Alice')
+      property1 = Property.new(name: 'Park Place', price: 2, colour: 'dark blue')
+      property2 = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
+
+      board.add_square(property1)
+      board.add_square(property2)
+
+      player1.buy_property(property1)
+      player1.buy_property(property2)
+
+      player2.pay_rent(property1, board)
+
+      expect(player2.money).to eq(15)
+      expect(player1.money).to eq(11)
     end
   end
 
