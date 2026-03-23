@@ -1,24 +1,29 @@
 require_relative 'board'
 
 class Property < Square
-    attr_reader :name, :price, :colour
-    attr_accessor :owner
+    attr_reader :name, :colour
+    attr_accessor :owner, :price
 
     def initialize(name:, price:, colour:, owner: nil)
       raise ArgumentError, "price can't be nil" if price.nil?
       raise ArgumentError, "colour can't be nil" if colour.nil?
         super(name: name, type: "property")
+        @base_price = price
         @price = price
         @colour = colour
         @owner = owner
     end
 
     def is_owned?
-        !@owner.nil?
+      !@owner.nil?
     end
-
+    
     def is_owned_by?(player)
         @owner == player
+    end
+
+    def is_rent_doubled?(board)
+        board.check_for_monopoly(@owner, @colour)
     end
 end
 
