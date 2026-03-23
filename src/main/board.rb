@@ -14,17 +14,28 @@ class Board
   end
 
   def add_square(square)
-    if square.type == 'property'
+    if square.is_a?(Property)
+      @squares << square
+    elsif square.type == 'property'
       @squares << square.to_property
     else
       @squares << square
     end
   end
 
-  def check_for_monopoly(player,colour)
+  def check_for_monopoly(player, colour)
     properties_of_colour = @squares.select { |square| square.is_a?(Property) && square.colour == colour }
-    properties_owned_by_player = properties_of_colour.select { |property| property.is_owned_by?(player) }
-    return properties_of_colour.length > 0 && properties_of_colour.length == properties_owned_by_player.length
+    return properties_of_colour.all? { |property| property.is_owned_by?(player) }
+  end
+
+  def update_rent_for_monopoly(player, colour)
+    if check_for_monopoly(player, colour)
+      @squares.each do |square|
+        if square.is_a?(Property) && square.colour == colour && square.is_owned_by?(player)
+          square.rent *= 2
+        end
+      end
+    end
   end
 end
 

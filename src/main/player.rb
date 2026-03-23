@@ -19,7 +19,7 @@ class Player
         end
     end
 
-    def buy_property(property)
+    def buy_property(property, board)
         return false if property.nil? || !property.is_property?
 
         if property.is_owned?
@@ -28,6 +28,8 @@ class Player
         elsif @money >= property.price
             @money -= property.price
             property.owner = self
+            # TODO: Check for monopoly and update rent if necessary
+            board.update_rent_for_monopoly(self, property.colour)
             puts "BUY: #{name} bought #{property.name} for $#{property.price}. Remaining money: $#{@money}"
             return true
         else
@@ -38,14 +40,13 @@ class Player
 
     def pay_rent(property, board)
         if property.is_owned? && !property.is_owned_by?(self)
-            rent = property.rent
             if property.is_rent_doubled?(board)
-                rent *= 2
-                puts "RENT DOUBLED: #{property.name} is part of a monopoly. Rent is doubled to $#{format('%.1f', rent)}."
+                property.rent *= 2
+                puts "RENT DOUBLED: #{property.name} rent is doubled to $#{property.rent} due to monopoly."
             end
-            @money -= rent
-            property.owner.money += rent
-            puts "PAY RENT: #{name} paid $#{format('%.1f', rent)}. #{property.owner.name}: $#{format('%.1f', property.owner.money)}. #{name}: $#{format('%.1f', @money)}."
+            @money -= property.rent
+            property.owner.money += property.rent
+            puts "PAY RENT: #{name} paid $#{property.rent}. #{property.owner.name}: $#{property.owner.money}. #{name}: $#{@money}."
         end
     end
 
