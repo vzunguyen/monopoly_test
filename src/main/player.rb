@@ -19,7 +19,7 @@ class Player
         end
     end
 
-    def buy_property(property, board)
+    def buy_property(property)
         return false if property.nil? || !property.is_property?
 
         if property.is_owned?
@@ -28,7 +28,6 @@ class Player
         elsif @money >= property.price
             @money -= property.price
             property.owner = self
-            property.is_rent_doubled?(board) ? property.price *= 2 : property.price
             puts "BUY: #{name} bought #{property.name} for $#{property.price}. Remaining money: $#{@money}"
             return true
         else
@@ -37,12 +36,16 @@ class Player
         end
     end
 
-    def pay_rent(property)
+    def pay_rent(property, board)
         if property.is_owned? && !property.is_owned_by?(self)
-            rent = property.price
+            rent = property.rent
+            if property.is_rent_doubled?(board)
+                rent *= 2
+                puts "RENT DOUBLED: #{property.name} is part of a monopoly. Rent is doubled to $#{format('%.1f', rent)}."
+            end
             @money -= rent
-            property.owner.money += rent # TODO: Maybe add a method to Property to handle rent payment and ownership transfer logic instead of directly modifying the owner's money here
-            puts "PAY RENT: #{name} paid $#{rent}. #{property.owner.name}: $#{property.owner.money}. #{name}: $#{@money}."
+            property.owner.money += rent
+            puts "PAY RENT: #{name} paid $#{format('%.1f', rent)}. #{property.owner.name}: $#{format('%.1f', property.owner.money)}. #{name}: $#{format('%.1f', @money)}."
         end
     end
 

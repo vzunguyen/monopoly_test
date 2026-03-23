@@ -50,7 +50,8 @@ end
 
 # GAME LOOP
 board = load_board("../data/board.json")
-dice = load_dice("../data/rolls_1.json")
+# dice = load_dice("../data/rolls_1.json")
+dice = 60.times.map { rand(1..6) }
 
 turn_index = 0
 dice.length.times do
@@ -66,19 +67,19 @@ dice.length.times do
     puts "MOVE: #{current_player.name} moved to position #{current_player.position} (#{current_square.name})"
 
   # BUY PROPERTY
-    current_player.buy_property(current_square, board) if current_square.is_property?
+    current_player.buy_property(current_square) if current_square.is_property?
 
   # PAY RENT
-    current_player.pay_rent(current_square) if current_square.is_property?
+    current_player.pay_rent(current_square, board) if current_square.is_property?
 
   # END GAME IF BANKRUPTCY
   if current_player.is_bankrupt?
-    puts "\n#{current_player.name} is bankrupt! Game over."
+    puts "\n#{current_player.name} is bankrupt!"
     break
   end
 
   turn_index += 1
 end
 
-game_event.game_over_announcement(players)
+game_event.game_over_announcement(players, board)
 
