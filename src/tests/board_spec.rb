@@ -1,5 +1,7 @@
 require 'rspec/autorun'
 require_relative '../main/board'
+require_relative '../main/property'
+require_relative '../main/player'
 
 describe 'Board' do
   describe '#add_square' do
@@ -30,22 +32,47 @@ describe 'Board' do
       board = Board.new
       expect(board.length).to eq(0)
     end
+  end
 
-    describe '#to_property' do
-      it 'converts a property square to a Property object' do
-        square = Square.new(name: 'Boardwalk', type: 'property', price: 400, colour: 'dark blue')
-        property = square.to_property
-        expect(property).to be_a(Property)
-        expect(property.name).to eq('Boardwalk')
-        expect(property.price).to eq(400)
-        expect(property.colour).to eq('dark blue')
-      end
-
-      it 'raises an error when trying to convert a non-property square' do
-        square = Square.new(name: 'Go', type: 'go')
-        expect { square.to_property }.to raise_error(RuntimeError)
-      end
+  describe '#to_property' do
+    it 'converts a property square to a Property object' do
+      square = Square.new(name: 'Boardwalk', type: 'property', price: 400, colour: 'dark blue')
+      property = square.to_property
+      expect(property).to be_a(Property)
+      expect(property.name).to eq('Boardwalk')
+      expect(property.price).to eq(400)
+      expect(property.colour).to eq('dark blue')
     end
+
+    it 'raises an error when trying to convert a non-property square' do
+      square = Square.new(name: 'Go', type: 'go')
+      expect { square.to_property }.to raise_error(RuntimeError)
+    end
+  end
+
+  describe '#check_for_monopoly' do
+  board = Board.new
+  player = Player.new(name: 'Bob')
+  property1 = Property.new(name: 'Park Place', price: 2, colour: 'blue')
+  property2 = Property.new(name: 'Boardwalk', price: 2, colour: 'blue')
+
+  board.add_square(property1)
+  board.add_square(property2)
+
+  it 'it returns true if player has monopoly' do
+    player.buy_property(property1, board)
+    player.buy_property(property2, board)
+
+    expect(property1.owner).to eq(player)
+    expect(property2.owner).to eq(player)
+
+    expect(board.check_for_monopoly(player, "blue")).to eq(true)
+  end
+
+  it 'returns false if player does not have monopoly' do
+    player2 = Player.new(name: 'Alice')
+    expect(board.check_for_monopoly(player2, 'blue')).to eq(false)
+  end
   end
 end
 
