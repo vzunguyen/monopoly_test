@@ -62,14 +62,14 @@ dice.length.times do
 
   # MOVE PLAYER
   current_player.move(steps, board)
-    landed_square = board[current_player.position]
-    puts "MOVE: #{current_player.name} moved to position #{current_player.position} (#{landed_square.name})"
+    current_square = board[current_player.position]
+    puts "MOVE: #{current_player.name} moved to position #{current_player.position} (#{current_square.name})"
 
   # BUY PROPERTY
-    current_player.buy_property(landed_square, board) if landed_square.is_property?
+    current_player.buy_property(current_square, board) if current_square.is_property?
 
   # PAY RENT
-    current_player.pay_rent(landed_square) if landed_square.is_property?
+    current_player.pay_rent(current_square) if current_square.is_property?
 
   # END GAME IF BANKRUPTCY
   if current_player.is_bankrupt?
