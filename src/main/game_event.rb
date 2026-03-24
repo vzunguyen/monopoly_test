@@ -20,7 +20,6 @@ class GameEvent
   end
 
   def game_over_announcement(players, board)
-    # TODO: Check different type of errors
     raise ArgumentError, 'players must be a list with more than one player' if players.length <= 1
 
     puts "\n--- GAME OVER ---"
