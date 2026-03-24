@@ -14,6 +14,7 @@ class GameEvent
   end
 
   def players_net_worth(players)
+    puts '--- PLAYERS NET WORTH ---'
     players.each do |player|
       puts "#{player.name} has $#{player.money}"
     end
