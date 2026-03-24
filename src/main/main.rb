@@ -17,7 +17,7 @@ players = [
   Player.new(name: 'Sweedal')
 ]
 
-players.each { |player| puts "DEBUG: #{player.inspect}" }
+players.each { |player| puts "PLAYER ADDED: #{player.inspect}" }
 
 def load_board(file_path)
   file_path = File.expand_path(file_path, __dir__)
@@ -45,7 +45,7 @@ def load_dice(file_path)
     puts 'ERROR: Failed to load dice data'
     nil
   else
-    puts "DEBUG: Dice data successful: #{dice_data.inspect}"
+    puts "DICE: Loaded dice data"
     dice_data
   end
 end
@@ -68,10 +68,10 @@ dice.length.times do
   puts "MOVE: #{current_player.name} moved to position #{current_player.position} (#{current_square.name})"
 
   # BUY PROPERTY
-  current_player.buy_property(current_square) if current_square.is_property?
+  current_player.buy_property(current_square, board) if current_square.is_property?
 
   # PAY RENT
-  current_player.pay_rent(current_square, board) if current_square.is_property?
+  current_player.pay_rent(current_square) if current_square.is_property?
 
   # END GAME IF BANKRUPTCY
   if current_player.is_bankrupt?
