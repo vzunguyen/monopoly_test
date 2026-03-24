@@ -19,6 +19,8 @@ To-be-put-in-later
 - `bundle exec rspec src/tests/ -f d` (--format documentation)
 - `bundle exec rspec src/tests/ -f f` (--format failure)
 
+*Additional: If want to fix linting errors, use `bundle exec rubocop -a`*
+
 # Git Log History
 
 To-be-added
