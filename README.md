@@ -1,51 +1,39 @@
-# Technologies Used
-
-- Language: Ruby on Rails (4.0.2)
-- Test framework: RSpec (3.13)
-  - rspec-core 3.13.6
-  - rspec-expectations 3.13.5
-  - rspec-mocks 3.13.8
-  - rspec-support 3.13.7
-
 # Folder Structure
 
 To-be-put-in-later
 
 # Design Assumptions
 
-1. Player will not buy property when player do not have enough money.
-2. Player only go bankrupt when their money go under 0.
-3. Rent price (?)
+1. Player will not buy property when player does not have enough money.
+2. Players only go bankrupt when their money go under 0.
+3. Rent price is different to property price: For this, I decided that rent price should be 50% property price as any prices under will make the rent too low for bankruptcy event to happen.
 
 # How to run this application?
-
-## Running program
-
-1. [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/): Please remember to check the version of Ruby you're installing (version 4.0.2) to be similar to the version mentioned above.
-2. Run program: `ruby src/main/main.rb`
-
-## Test
-
-1. Installing RSpec: `gem install rspec`
-2. Double-check RSpec version by `gem exec rspec -v`
-3. To run all tests
-   1. Quick run: `gem exec rspec src/tests/`
-   2. To check with tests passed: `gem exec rspec src/tests/ -f d` (--format documentation)
-   3. `gem exec rspec src/tests/ -f f` (--format failure)
+1. [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/) (I'm using rbenv to manage Ruby versions)
+2. As I'm using Homebrew Ruby, I'm using `bundle` to manage gems in [Gemfile](Gemfile): `bundle install`
+- RSpec: For test framework
+- Rubocop: For code linting and formatting
+3. To run the application, use `bundle exec ruby src/main/main.rb` in terminal.
+4. To run the tests:
+- `bundle exec rspec src/tests/`
+- `bundle exec rspec src/tests/ -f d` (--format documentation)
+- `bundle exec rspec src/tests/ -f f` (--format failure)
 
 # Git Log History
 
 To-be-added
 
-# Notable Changes
+# Notable Changes/Incidents
 
 ## Monopoly check: If player owns all properties of same colour
+
+Several changes were made to this feature of the project, I will list them out according to when the change was made.
+
+### 1. Having Board checking monopoly whenever a Player land on a property
 
 Considered having Board checking monopoly whenever a Player land on a property. For example:
 
 ````
-**PSEUDOCODE**
-
 for each roll in dice_file
   player.move
   player.buy_property
@@ -56,11 +44,12 @@ end
 
 **Problem:** Poor Time Complexity
 
-**Solution:** Check and update price when the player (owner) buy_property. Time complexity now O(2n) when player decides to buy_property.
+### 2. Check monopoly when player buy property/pay rent, but only check the property that is bought
+
+**Reasoning for change:** Time complexity now O(2n) when player decides to buy_property.
+**Notes:** I did try to check monopoly when player pay rent with reasoning that if player only needs to pay double rent in the pay_rent method, no need to save the property price rent. However, due to later design changes with consideration to data integrity, I decided to check monopoly only when the player buys property.
 
 ````
-**PSEUDOCODE**
-
 class Player
   def buy_property
     # Check other conditions ...
@@ -77,3 +66,38 @@ for each roll in dice_file
   player.pay_rent
 end
 ````
+
+※ **Problem:** 
+1. Data Integrity: If we only check the property that is bought, we might miss out on the case where player already has a monopoly and buy another property of the same colour.
+
+### 3. Update rent price for all properties in the monopoly when player buy property
+
+※ **Reasoning for change:** Data integrity is now maintained as we check for all properties of the same colour when player buy property. Time complexity is O(2n) when player decides to buy_property.
+````
+class Player
+  def buy_property
+    # Check other conditions ...
+    if enough money
+      player pay for property
+      board.update_price_for_monopoly # Update price for all properties in the monopoly
+    end
+  end
+end
+````
+
+## Rent price: From the same value to price to creating a new attribute
+
+Before: 
+```
+class Property
+    attr_accessor :price
+end
+
+if player.buy_property: player.money -= property.price
+if player.pay_rent: player.money -= property.price
+```
+
+※ **Problem:**
+1. Data Consistency: If we change the price of the property, the rent price will also change.
+2. Introducing Bugs: If we change the price of the property for rent, the original property price will also be changed. Despite situations such as buying the property again is not possible in this scenario, this design will make it hard to expand the game.
+
