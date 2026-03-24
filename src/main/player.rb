@@ -16,7 +16,7 @@ class Player
     return unless @position < steps
 
     @money += 1
-    puts "DEBUG: #{name} passed 'Go' and collected $1. Total money: $#{@money}"
+    puts "GAIN $1: #{name} passed 'Go' and collected $1. Total money: $#{@money}"
   end
 
   def buy_property(property, board)
