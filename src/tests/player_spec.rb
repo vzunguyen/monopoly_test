@@ -5,12 +5,12 @@ require_relative '../main/property'
 
 describe 'Player' do
   describe '#initialize' do
-    let(:player) { Player.new(name: 'Bob') }
+    let(:bob) { Player.new(name: 'Bob') }
 
     it 'initializes with default position 0 and money 16' do
-      expect(player.name).to eq('Bob')
-      expect(player.position).to eq(0)
-      expect(player.money).to eq(16)
+      expect(bob.name).to eq('Bob')
+      expect(bob.position).to eq(0)
+      expect(bob.money).to eq(16)
     end
   end
 
