@@ -13,11 +13,12 @@
 | `src/main/game_event.rb` | File      | GameEvent class for game state reporting (winner announcement, player positions, how much players have left). |
 | `src/tests/`             | Directory | RSpec test suite for core classes and behaviors.                                                              |
 
-# Design Assumptions
+# Design Assumptions and Constraints
 
 1. Player will not buy property when player does not have enough money.
 2. Players only go bankrupt when their money go under 0.
 3. Rent price is different to property price: For this, I decided that rent price should be 50% property price as any prices under will make the rent too low for bankruptcy event to happen.
+4. Dice rolls are not randomized, and only 1-6 roll values are possible.
 
 # How to run this application?
 1. [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/) (I'm using rbenv to manage Ruby versions)
