@@ -30,7 +30,7 @@
 - `bundle exec rspec src/tests/ -f d` (--format documentation)
 - `bundle exec rspec src/tests/ -f f` (--format failure)
 
-*Additional: If want to fix linting errors, use `bundle exec rubocop -a`*
+*Additional: If you want to fix linting errors, use `bundle exec rubocop -a`*
 
 # Git Log History
 
