@@ -66,7 +66,7 @@ dice.each_with_index do |roll, index|
   current_square.on_land(current_player, board)
 
   # END GAME IF BANKRUPTCY
-  if current_player.is_bankrupt?
+  if current_player.is_bankrupt
     puts "\n#{current_player.name} is bankrupt!"
     break
   end
