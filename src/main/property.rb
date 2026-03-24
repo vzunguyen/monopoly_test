@@ -1,4 +1,5 @@
 require_relative 'board'
+require_relative 'square'
 
 class Property < Square
   attr_reader :name, :colour, :price
@@ -8,7 +9,7 @@ class Property < Square
     raise ArgumentError, "price can't be nil" if price.nil?
     raise ArgumentError, "colour can't be nil" if colour.nil?
 
-    super(name: name, type: 'property')
+    super(name: name)
     @price = price
     @rent = rent.to_f.round(1)
     @colour = colour
@@ -25,6 +26,14 @@ class Property < Square
 
   def is_rent_doubled?(board) # Potentially not needed
     board.check_for_monopoly(@owner, @colour)
+  end
+
+  def on_land(current_player, board)
+    # BUY PROPERTY
+    current_player.buy_property(self, board)
+
+    # PAY RENT
+    current_player.pay_rent(self)
   end
 end
 

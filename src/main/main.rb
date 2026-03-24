@@ -5,7 +5,9 @@ require 'ostruct'
 require_relative 'player'
 require_relative 'board'
 require_relative 'property'
+require_relative 'square'
 require_relative 'game_event'
+require_relative 'go'
 
 game_event = GameEvent.new
 
@@ -25,16 +27,14 @@ def load_board(file_path)
 
   board = Board.new
   board_data.each do |square|
-    board.add_square(
-      Square.new(
-        name: square.name,
-        type: square.type,
-        price: square.price,
-        colour: square.colour
-      )
-    )
+    if square.type == 'property'
+      board.add_square(Property.new(name: square.name, price: square.price, colour: square.colour))
+    elsif square.type == 'go'
+      board.add_square(Go.new)
+    else
+      raise "ERROR: Invalid square type: #{square.type}"
+    end
   end
-
   board
 end
 
@@ -63,11 +63,7 @@ dice.each_with_index do |roll, index|
   current_player.move(roll, board)
   current_square = board[current_player.position]
 
-  # BUY PROPERTY
-  current_player.buy_property(current_square, board) if current_square.is_property?
-
-  # PAY RENT
-  current_player.pay_rent(current_square) if current_square.is_property?
+  current_square.on_land(current_player, board)
 
   # END GAME IF BANKRUPTCY
   if current_player.is_bankrupt?
