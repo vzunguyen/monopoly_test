@@ -74,6 +74,28 @@ describe 'Board' do
       expect(board.check_for_monopoly(player2, 'blue')).to eq(false)
     end
   end
+
+  describe '#update_rent_for_monopoly' do
+    board = Board.new
+    player = Player.new(name: 'Bob')
+    property1 = Property.new(name: 'Park Place', price: 2, colour: 'blue')
+    property2 = Property.new(name: 'Boardwalk', price: 2, colour: 'blue')
+
+    board.add_square(property1)
+    board.add_square(property2)
+
+    it 'updates rent for monopoly' do
+      player.buy_property(property1, board)
+      expect(property1.owner).to eq(player)
+      expect(property1.rent).to eq(1)
+
+      player.buy_property(property2, board)
+
+      expect(property2.owner).to eq(player)
+      expect(property1.rent).to eq(2)
+      expect(property2.rent).to eq(2)
+      end
+  end
 end
 
 describe 'Square' do
