@@ -51,50 +51,60 @@ describe 'Board' do
   end
 
   describe '#check_for_monopoly' do
-    board = Board.new
-    player = Player.new(name: 'Bob')
-    property1 = Property.new(name: 'Park Place', price: 2, colour: 'blue')
-    property2 = Property.new(name: 'Boardwalk', price: 2, colour: 'blue')
+    let(:board) { Board.new }
+    let(:bob) { Player.new(name: 'Bob') }
+    let(:property1) { Property.new(name: 'Park Place', price: 2, colour: 'blue') }
+    let(:property2) { Property.new(name: 'Boardwalk', price: 2, colour: 'blue') }
 
-    board.add_square(property1)
-    board.add_square(property2)
+    before do
+      board.add_square(property1)
+      board.add_square(property2)
+    end
 
     it 'it returns true if player has monopoly' do
-      player.buy_property(property1, board)
-      player.buy_property(property2, board)
+      bob.buy_property(property1, board)
+      bob.buy_property(property2, board)
 
-      expect(property1.owner).to eq(player)
-      expect(property2.owner).to eq(player)
+      expect(property1.owner).to eq(bob)
+      expect(property2.owner).to eq(bob)
 
-      expect(board.check_for_monopoly(player, 'blue')).to eq(true)
+      expect(board.check_for_monopoly(bob, 'blue')).to eq(true)
     end
 
     it 'returns false if player does not have monopoly' do
-      player2 = Player.new(name: 'Alice')
-      expect(board.check_for_monopoly(player2, 'blue')).to eq(false)
+      alice = Player.new(name: 'Alice')
+      expect(board.check_for_monopoly(alice, 'blue')).to eq(false)
     end
   end
 
   describe '#update_rent_for_monopoly' do
-    board = Board.new
-    player = Player.new(name: 'Bob')
-    property1 = Property.new(name: 'Park Place', price: 2, colour: 'blue')
-    property2 = Property.new(name: 'Boardwalk', price: 2, colour: 'blue')
+    let(:board) { Board.new }
+    let(:bob) { Player.new(name: 'Bob') }
+    let(:property1) { Property.new(name: 'Park Place', price: 2, colour: 'blue') }
+    let(:property2) { Property.new(name: 'Boardwalk', price: 2, colour: 'blue') }
 
-    board.add_square(property1)
-    board.add_square(property2)
+    before do
+      board.add_square(property1)
+      board.add_square(property2)
+    end
+
+    it 'do not update rent for non-monopoly' do
+      bob.buy_property(property1, board)
+      expect(property1.owner).to eq(bob)
+      expect(property1.rent).to eq(1)
+    end
 
     it 'updates rent for monopoly' do
-      player.buy_property(property1, board)
-      expect(property1.owner).to eq(player)
+      bob.buy_property(property1, board)
+      expect(property1.owner).to eq(bob)
       expect(property1.rent).to eq(1)
 
-      player.buy_property(property2, board)
+      bob.buy_property(property2, board)
 
-      expect(property2.owner).to eq(player)
+      expect(property2.owner).to eq(bob)
       expect(property1.rent).to eq(2)
       expect(property2.rent).to eq(2)
-      end
+    end
   end
 end
 
