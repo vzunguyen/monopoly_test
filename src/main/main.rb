@@ -50,6 +50,12 @@ def load_dice(file_path) # TODO: Dice needs to be only from 1 - 6
   end
 end
 
+def money_gained_passing_go(player, passed_go_count)
+  return if passed_go_count == 0 || passed_go_count.nil?
+  player.money += passed_go_count
+  puts "GAIN MONEY AT GO: #{player.name} passed 'Go, gained $#{passed_go_count}. Total money: $#{player.money}"
+end
+
 # GAME LOOP
 board = load_board('../data/board.json')
 dice = load_dice('../data/rolls_1.json')
@@ -60,7 +66,9 @@ dice.each_with_index do |roll, index|
   puts "\n--- TURN #{current_player.name} ---"
 
   # MOVE PLAYER
-  current_player.move(roll, board)
+  times_passed_go = current_player.move(roll, board)
+  money_gained_passing_go(current_player, times_passed_go)
+
   current_square = board[current_player.position]
 
   current_square.on_land(current_player, board)
