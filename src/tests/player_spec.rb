@@ -121,6 +121,8 @@ describe 'Player' do
     end
 
     it 'does not pay rent if property is not owned' do
+      expect(other_property.owner).to be_nil
+
       bob.pay_rent(other_property)
       expect(bob.money).to eq(16)
     end
@@ -138,6 +140,9 @@ describe 'Player' do
 
       expect(other_property.owner).to eq(bob)
       expect(board.check_for_monopoly(bob, 'blue')).to eq(true)
+      expect(owned_property.rent).to eq(4)
+      expect(other_property.rent).to eq(4)
+
       expect(bob.money).to eq(8)
 
       alice.pay_rent(other_property)
