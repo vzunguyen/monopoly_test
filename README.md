@@ -19,10 +19,11 @@
 2. Players only go bankrupt when their money go under 0.
 3. Rent price is different to property price: For this, I decided that rent price should be 50% property price as any prices under will make the rent too low for bankruptcy event to happen.
 4. Dice rolls are not randomized, and only 1-6 roll values are possible.
+5. If player is going bankrupt, give the owner the remaining money of the player, and the player will have 0 money left.
 
 # How to run this application?
 1. [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/) (I'm using rbenv to manage Ruby versions)
-2. As I'm using Homebrew Ruby, I'm using `bundle` to manage gems in [Gemfile](Gemfile): `bundle install`
+2. I'm using `bundle` to manage gems in [Gemfile](Gemfile): `bundle install`
 - RSpec: For test framework
 - Rubocop: For code linting and formatting
 3. To run the application, use `bundle exec ruby src/main/main.rb` in terminal.
