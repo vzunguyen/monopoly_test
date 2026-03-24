@@ -45,7 +45,7 @@ def load_dice(file_path)
     puts 'ERROR: Failed to load dice data'
     nil
   else
-    puts "DICE: Loaded dice data"
+    puts 'DICE: Loaded dice data'
     dice_data
   end
 end

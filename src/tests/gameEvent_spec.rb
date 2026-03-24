@@ -4,10 +4,10 @@ require_relative '../main/player'
 
 describe 'GameEvent' do
   describe '#game_over_announcement' do
-    let (:board) { Board.new }
-    let (:bob) { Player.new(name: 'Bob', money: 15) }
-    let (:alice) { Player.new(name: 'Alice', money: 20) }
-    let (:game_event) { GameEvent.new }
+    let(:board) { Board.new }
+    let(:bob) { Player.new(name: 'Bob', money: 15) }
+    let(:alice) { Player.new(name: 'Alice', money: 20) }
+    let(:game_event) { GameEvent.new }
 
     before do
       board.add_square(Square.new(name: 'Go', type: 'go'))
