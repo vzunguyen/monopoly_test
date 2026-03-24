@@ -4,7 +4,6 @@ require_relative '../main/board'
 require_relative '../main/property'
 
 describe 'Player' do
-
   board = Board.new
   board.add_square(Square.new(name: 'Go', type: 'go'))
   board.add_square(Square.new(name: 'Mediterranean Avenue', type: 'property', price: 60, colour: 'brown'))
@@ -72,7 +71,7 @@ describe 'Player' do
       broadwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
 
       player1.buy_property(broadwalk_property)
-      player2.pay_rent(broadwalk_property, board) 
+      player2.pay_rent(broadwalk_property, board)
 
       expect(player2.money).to eq(14)
       expect(player1.money).to eq(14)
@@ -105,8 +104,8 @@ describe 'Player' do
       board.add_square(property1)
       board.add_square(property2)
 
-      player1.buy_property(property1)
-      player1.buy_property(property2)
+      player1.buy_property(property1, board)
+      player1.buy_property(property2, board)
 
       player2.pay_rent(property1, board)
 

@@ -4,9 +4,9 @@ require_relative '../main/player'
 
 describe 'GameEvent' do
   describe '#game_over_announcement' do
-  board = Board.new
-  board.add_square(Square.new(name: 'Go', type: 'go'))
-  
+    board = Board.new
+    board.add_square(Square.new(name: 'Go', type: 'go'))
+
     it 'prints the winner, players last position and net worth' do
       player1 = Player.new(name: 'Bob', money: 100)
       player2 = Player.new(name: 'Alice', money: 150)

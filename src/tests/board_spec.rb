@@ -51,28 +51,28 @@ describe 'Board' do
   end
 
   describe '#check_for_monopoly' do
-  board = Board.new
-  player = Player.new(name: 'Bob')
-  property1 = Property.new(name: 'Park Place', price: 2, colour: 'blue')
-  property2 = Property.new(name: 'Boardwalk', price: 2, colour: 'blue')
+    board = Board.new
+    player = Player.new(name: 'Bob')
+    property1 = Property.new(name: 'Park Place', price: 2, colour: 'blue')
+    property2 = Property.new(name: 'Boardwalk', price: 2, colour: 'blue')
 
-  board.add_square(property1)
-  board.add_square(property2)
+    board.add_square(property1)
+    board.add_square(property2)
 
-  it 'it returns true if player has monopoly' do
-    player.buy_property(property1, board)
-    player.buy_property(property2, board)
+    it 'it returns true if player has monopoly' do
+      player.buy_property(property1, board)
+      player.buy_property(property2, board)
 
-    expect(property1.owner).to eq(player)
-    expect(property2.owner).to eq(player)
+      expect(property1.owner).to eq(player)
+      expect(property2.owner).to eq(player)
 
-    expect(board.check_for_monopoly(player, "blue")).to eq(true)
-  end
+      expect(board.check_for_monopoly(player, 'blue')).to eq(true)
+    end
 
-  it 'returns false if player does not have monopoly' do
-    player2 = Player.new(name: 'Alice')
-    expect(board.check_for_monopoly(player2, 'blue')).to eq(false)
-  end
+    it 'returns false if player does not have monopoly' do
+      player2 = Player.new(name: 'Alice')
+      expect(board.check_for_monopoly(player2, 'blue')).to eq(false)
+    end
   end
 end
 

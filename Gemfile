@@ -1,4 +1,5 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "rspec", "~> 3.13"
-
+gem 'json'
+gem 'rspec', '~> 3.13'
+gem 'rubocop'

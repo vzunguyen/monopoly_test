@@ -4,7 +4,7 @@ require_relative '../main/board'
 
 describe 'Property' do
   board = Board.new
-  
+
   it 'initializes with the correct name, price, and colour' do
     property = Property.new(name: 'Boardwalk', price: 400, colour: 'dark blue')
     expect(property.name).to eq('Boardwalk')
@@ -22,7 +22,7 @@ describe 'Property' do
     expect { Property.new(name: 'Boardwalk') }.to raise_error(ArgumentError)
     expect { Property.new(name: 'Boardwalk', price: 400) }.to raise_error(ArgumentError)
     expect { Property.new(name: 'Boardwalk', colour: 'blue') }.to raise_error(ArgumentError)
-  end 
+  end
 
   it 'returns error if initialized with no name' do
     expect { Property.new(price: 400, colour: 'blue') }.to raise_error(ArgumentError)
@@ -41,11 +41,11 @@ describe 'Property' do
   end
 
   # describe '#is_owned?' do
-    
+
   # end
 
   # describe '#is_owned_by?' do
-    
+
   # end
 
   describe '#is_rent_doubled?' do
