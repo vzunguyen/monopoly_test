@@ -38,7 +38,7 @@ def load_board(file_path)
   board
 end
 
-def load_dice(file_path)
+def load_dice(file_path) # TODO: Dice needs to be only from 1 - 6
   file_path = File.expand_path(file_path, __dir__)
   dice_data = JSON.parse(File.read(file_path), object_class: OpenStruct)
   if dice_data.nil?
@@ -54,18 +54,14 @@ end
 board = load_board('../data/board.json')
 dice = load_dice('../data/rolls_1.json')
 
-turn_index = 0
-dice.length.times do
-  current_player = players[turn_index % players.length]
-
-  steps = dice[turn_index]
+dice.each_with_index do |roll, index|
+  current_player = players[index % players.length]
 
   puts "\n--- TURN #{current_player.name} ---"
 
   # MOVE PLAYER
-  current_player.move(steps, board)
+  current_player.move(roll, board)
   current_square = board[current_player.position]
-  puts "MOVE: #{current_player.name} moved to position #{current_player.position} (#{current_square.name})"
 
   # BUY PROPERTY
   current_player.buy_property(current_square, board) if current_square.is_property?
@@ -78,8 +74,6 @@ dice.length.times do
     puts "\n#{current_player.name} is bankrupt!"
     break
   end
-
-  turn_index += 1
 end
 
 game_event.game_over_announcement(players, board)
