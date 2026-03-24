@@ -55,12 +55,12 @@ for each roll in dice_file
 end
 ````
 
-**Problem:** Poor Time Complexity
+※ **Problem:** Poor Time Complexity
 
 ### 2. Check monopoly when player buy property/pay rent, but only check the property that is bought
 
-**Reasoning for change:** Time complexity now O(2n) when player decides to buy_property.
-**Notes:** I did try to check monopoly when player pay rent with reasoning that if player only needs to pay double rent in the pay_rent method, no need to save the property price rent. However, due to later design changes with consideration to data integrity, I decided to check monopoly only when the player buys property.
+※ **Reasoning for change:** Time complexity now O(2n) when player decides to buy_property.
+※ **Notes:** I did try to check monopoly when player pay rent with reasoning that if player only needs to pay double rent in the pay_rent method, no need to save the property price rent. However, due to later design changes with consideration to data integrity, I decided to check monopoly only when the player buys property.
 
 ````
 class Player
