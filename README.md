@@ -1,6 +1,17 @@
 # Folder Structure
 
-To-be-put-in-later
+| Path                     | Type      | Purpose                                                                                                       |
+|--------------------------|-----------|---------------------------------------------------------------------------------------------------------------|
+| `Gemfile`                | File      | Declares Ruby dependencies used by the project (RSpec, RuboCop, etc.).                                        |
+| `README.md`              | File      | Project documentation, setup instructions, and design notes.                                                  |
+| `rules/README.md`        | File      | The given README file that explains requirements of the project.                                              |
+| `src/data/`              | Directory | Input JSON files used by the game (board layout and dice rolls).                                              |
+| `src/main/main.rb`       | File      | Entry point for the game; initializes players, loads board and dice data, and runs game simulation.           |
+| `src/main/player.rb`     | File      | Player class definition and related methods (move, buy property, pay rent, bankruptcy check).                 |
+| `src/main/board.rb`      | File      | Board and Square class definitions; manages board squares and monopoly rent calculations.                     |
+| `src/main/property.rb`   | File      | Property class definition (extends Square); manages property ownership, rent, and monopoly detection.         |
+| `src/main/game_event.rb` | File      | GameEvent class for game state reporting (winner announcement, player positions, how much players have left). |
+| `src/tests/`             | Directory | RSpec test suite for core classes and behaviors.                                                              |
 
 # Design Assumptions
 
