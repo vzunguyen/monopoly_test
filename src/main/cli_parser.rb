@@ -2,7 +2,7 @@
 require 'optparse'
 class CLIParser
   attr_reader :dice_rolls_file_path, :board_file_path, :players_file_path
-  def parse
+  def parse(args)
     opts = OptionParser.new do |opts|
       opts.banner = "Usage: ruby src/main/main.rb [options]"
 
@@ -24,7 +24,7 @@ class CLIParser
       end
     end
 
-    opts.parse!
+    opts.parse!(args)
     self
   end
 end
