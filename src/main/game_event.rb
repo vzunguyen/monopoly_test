@@ -25,7 +25,7 @@ class GameEvent
 
     puts "\n--- GAME OVER ---"
     print_winner(players)
-    players_last_position(players, board) # Assuming all players are on the same square at game over
+    players_last_position(players, board)
     players_net_worth(players)
   end
 end

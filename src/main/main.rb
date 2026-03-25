@@ -24,12 +24,10 @@ players.each { |player| puts "PLAYER ADDED: #{player.inspect}" }
 def get_data_from(file_path)
   file_path = File.expand_path(file_path, __dir__)
   data = JSON.parse(File.read(file_path), object_class: OpenStruct)
-  if data.nil?
-    raise "ERROR: Failed to load data from #{file_path}"
-  else
-    puts "DATA: Loaded data from #{file_path}"
-    data
-  end
+  raise "ERROR: Failed to load data from #{file_path}" if data.nil?
+
+  puts "DATA: Loaded data from #{file_path}"
+  data
 end
 
 def load_board(data)
@@ -48,6 +46,7 @@ end
 
 def gain_money_passing_go(player, passed_go_count)
   return if passed_go_count == 0 || passed_go_count.nil?
+
   player.money += passed_go_count
   puts "GAIN MONEY AT GO: #{player.name} passed 'Go, gained $#{passed_go_count}. Total money: $#{player.money}"
 end
