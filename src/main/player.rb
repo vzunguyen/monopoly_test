@@ -18,20 +18,29 @@ class Player
   end
 
   def buy_property(property)
+    return false if @money < property.price
+
     @money -= property.price
     property.owner = self
     puts "BUY: #{name} bought #{property.name} for $#{property.price}. Remaining money: $#{@money}"
+    true
   end
 
   def pay_rent(property)
+    amount_to_pay = property.rent
     if @money < property.rent
-      property.owner.money += @money
+      amount_to_pay = @money
       @money = 0
       @is_bankrupt = true
     else
       @money -= property.rent
-      property.owner.money += property.rent
     end
-    puts "PAY RENT: #{name} paid $#{property.rent}. #{property.owner.name}: $#{property.owner.money}. #{name}: $#{@money}."
+    puts "PAY RENT: #{name} paid $#{amount_to_pay}."
+    amount_to_pay
+  end
+
+  def receive_rent(rent)
+    @money += rent
+    puts "RECEIVE RENT: #{name} received $#{rent}."
   end
 end
