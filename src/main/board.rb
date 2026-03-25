@@ -28,5 +28,6 @@ class Board
     @squares.each do |square|
       square.rent *= 2 if square.is_a?(Property) && square.colour == colour
     end
+    puts "RENT DOUBLED: #{player.name} has monopoly in #{colour}."
   end
 end
