@@ -13,6 +13,13 @@
 | `src/main/game_event.rb` | File      | GameEvent class for game state reporting (winner announcement, player positions, how much players have left). |
 | `src/tests/`             | Directory | RSpec test suite for core classes and behaviors.                                                              |
 
+# Project Scope
+
+- **Project Name:** Monopoly
+- **Project Description:** A simple implementation of the Monopoly game.
+- **Deadline:** 27th March 2026
+- **Goal:** To create a simple simulation of the Monopoly game.
+
 # Design Assumptions and Constraints
 
 1. Player will not buy property when player does not have enough money.
@@ -20,6 +27,7 @@
 3. Rent price is different to property price: For this, I decided that rent price should be 50% property price as any prices under will make the rent too low for bankruptcy event to happen.
 4. Dice rolls are not randomized, and only 1-6 roll values are possible.
 5. If player is going bankrupt, give the owner the remaining money of the player, and the player will have 0 money left.
+6. GO will always be at the start of the board.
 
 # How to run this application?
 1. [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/) (I'm using rbenv to manage Ruby versions)
@@ -115,4 +123,9 @@ if player.pay_rent: player.money -= property.price
 ※ **Problem:**
 1. Data Consistency: If we change the price of the property, the rent price will also change.
 2. Introducing Bugs: If we change the price of the property for rent, the original property price will also be changed. Despite situations such as buying the property again is not possible in this scenario, this design will make it hard to expand the game.
+
+## Implementing GO Square
+**What did I do at first?:** I decided to keep GO square as the base class Square as I believe with my implementation, there was no behaviour for Go Square.
+
+**What I did next?:** I decided to create a new class GO Square that inherits from Square as it helps to keep the code clean and more extensible.
 
