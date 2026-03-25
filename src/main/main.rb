@@ -21,12 +21,20 @@ players = [
 
 players.each { |player| puts "PLAYER ADDED: #{player.inspect}" }
 
-def load_board(file_path)
+def get_data_from(file_path)
   file_path = File.expand_path(file_path, __dir__)
-  board_data = JSON.parse(File.read(file_path), object_class: OpenStruct)
+  data = JSON.parse(File.read(file_path), object_class: OpenStruct)
+  if data.nil?
+    raise "ERROR: Failed to load data from #{file_path}"
+  else
+    puts "DATA: Loaded data from #{file_path}"
+    data
+  end
+end
 
+def load_board(data)
   board = Board.new
-  board_data.each do |square|
+  data.each do |square|
     if square.type == 'property'
       board.add_square(Property.new(name: square.name, price: square.price, colour: square.colour))
     elsif square.type == 'go'
@@ -38,36 +46,26 @@ def load_board(file_path)
   board
 end
 
-def load_dice(file_path) # TODO: Dice needs to be only from 1 - 6
-  file_path = File.expand_path(file_path, __dir__)
-  dice_data = JSON.parse(File.read(file_path), object_class: OpenStruct)
-  if dice_data.nil?
-    puts 'ERROR: Failed to load dice data'
-    nil
-  else
-    puts 'DICE: Loaded dice data'
-    dice_data
-  end
-end
-
-def money_gained_passing_go(player, passed_go_count)
+def gain_money_passing_go(player, passed_go_count)
   return if passed_go_count == 0 || passed_go_count.nil?
   player.money += passed_go_count
   puts "GAIN MONEY AT GO: #{player.name} passed 'Go, gained $#{passed_go_count}. Total money: $#{player.money}"
 end
 
 # GAME LOOP
-board = load_board('../data/board.json')
-dice = load_dice('../data/rolls_1.json')
+board = load_board(get_data_from('../data/board.json'))
+dice = get_data_from('../data/rolls_1.json')
 
 dice.each_with_index do |roll, index|
+  raise 'ERROR: Dice rolls must be from 1 - 6' unless (1..6).cover?(roll)
+
   current_player = players[index % players.length]
 
   puts "\n--- TURN #{current_player.name} ---"
 
   # MOVE PLAYER
   times_passed_go = current_player.move(roll, board)
-  money_gained_passing_go(current_player, times_passed_go)
+  gain_money_passing_go(current_player, times_passed_go)
 
   current_square = board[current_player.position]
 
