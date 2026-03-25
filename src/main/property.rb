@@ -3,7 +3,7 @@ require_relative 'square'
 
 class Property < Square
   attr_reader :name, :colour, :price
-  attr_accessor :owner, :rent
+  attr_accessor :owner, :rent, :is_rent_doubled
 
   def initialize(name:, price:, colour:, rent: (price.to_f / 2).round(1), owner: nil)
     raise ArgumentError, "price can't be nil" if price.nil?
@@ -14,6 +14,7 @@ class Property < Square
     @rent = rent.to_f.round(1)
     @colour = colour
     @owner = owner
+    @is_rent_doubled = false
   end
 
   def is_owned?
@@ -24,22 +25,17 @@ class Property < Square
     @owner == player
   end
 
-  def is_rent_doubled?(board) # Potentially not needed
-    board.check_for_monopoly(@owner, @colour)
-  end
-
   def on_land(current_player, board)
     # BUY PROPERTY
     unless is_owned?
       current_player.buy_property(self)
       board.update_rent_for_monopoly(current_player, @colour)
     end
-    # TODO: May add more conditions to print conditions
+
     # PAY RENT
-    if is_owned? && !is_owned_by?(current_player)
-      amount_paid = current_player.pay_rent(self)
-      @owner.receive_rent(amount_paid)
-    end
+    return unless is_owned? && !is_owned_by?(current_player)
+    amount_paid = current_player.pay_rent(self)
+    @owner.receive_rent(amount_paid)
   end
 end
 

@@ -1,3 +1,4 @@
+require_relative 'property'
 class Board
   attr_reader :squares
 
@@ -6,6 +7,9 @@ class Board
   end
 
   def [](index)
+    raise TypeError, "ERROR: Invalid index type: #{index.class}. Expected Integer." unless index.is_a?(Integer)
+    raise IndexError, "ERROR: Index out of bounds: #{index}" if index < 0 || index >= @squares.length
+
     @squares[index]
   end
 
@@ -26,7 +30,10 @@ class Board
     return unless check_for_monopoly(player, colour)
 
     @squares.each do |square|
-      square.rent *= 2 if square.is_a?(Property) && square.colour == colour
+      if square.is_a?(Property) && square.colour == colour && !square.is_rent_doubled
+        square.rent *= 2
+        square.is_rent_doubled = true
+      end
     end
     puts "RENT DOUBLED: #{player.name} has monopoly in #{colour}."
   end
