@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rspec/autorun'
 require_relative '../main/main'
 require_relative '../main/board'
@@ -66,7 +67,6 @@ describe 'In Main' do
       expect(money_passed_go).to eq(1)
       gain_money_passing_go(player, money_passed_go)
 
-
       money_passed_go = player.move(1, board)
       expect(money_passed_go).to eq(1)
       gain_money_passing_go(player, money_passed_go)
@@ -74,6 +74,4 @@ describe 'In Main' do
       expect(player.money).to eq(18)
     end
   end
-
 end
-
