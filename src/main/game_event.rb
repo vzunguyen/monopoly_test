@@ -13,7 +13,7 @@ class GameEvent
     end
   end
 
-  def players_net_worth(players)
+  def print_players_net_worth(players)
     puts '--- PLAYERS NET WORTH ---'
     players.each do |player|
       puts "#{player.name} has $#{player.money}"
@@ -26,6 +26,6 @@ class GameEvent
     puts "\n--- GAME OVER ---"
     print_winner(players)
     players_last_position(players, board)
-    players_net_worth(players)
+    print_players_net_worth(players)
   end
 end

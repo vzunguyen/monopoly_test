@@ -38,27 +38,3 @@ class Property < Square
     @owner.receive_rent(amount_paid)
   end
 end
-
-class Properties
-  attr_reader :properties
-
-  def initialize(properties: [])
-    @properties = properties
-  end
-
-  def [](index)
-    @properties[index]
-  end
-
-  def length
-    @properties.length
-  end
-
-  def add_property(property)
-    @properties << property
-  end
-
-  def has_property?(property)
-    @properties.any? { |prop| prop.name == property.name }
-  end
-end

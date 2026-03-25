@@ -90,7 +90,7 @@ describe 'GameEvent' do
     it 'prints each player net worth in order' do
       players = [alice, bob, charlotte]
 
-      expect { game_event.players_net_worth(players) }.to output(
+      expect { game_event.print_players_net_worth(players) }.to output(
         /--- PLAYERS NET WORTH ---\nAlice has \$20\nBob has \$15\nCharlotte has \$12\n/
       ).to_stdout
     end
@@ -98,7 +98,7 @@ describe 'GameEvent' do
     it 'returns the same players collection' do
       players = [alice, bob]
 
-      result = game_event.players_net_worth(players)
+      result = game_event.print_players_net_worth(players)
 
       expect(result).to eq(players)
     end
