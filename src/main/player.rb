@@ -26,21 +26,27 @@ class Player
     true
   end
 
-  def pay_rent(property)
-    amount_to_pay = property.rent
-    if @money < property.rent
-      amount_to_pay = @money
-      @money = 0
+  def pay(amount, mandatory)
+    amount_to_pay = [amount, @money].min
+    if @money >= amount
+      @money -= amount_to_pay
+    elsif mandatory
+      @money -= amount_to_pay
       @is_bankrupt = true
-    else
-      @money -= property.rent
     end
-    puts "PAY RENT: #{name} paid $#{amount_to_pay}."
+    puts "PAY: #{name} paid $#{amount}. REMAINING MONEY: $#{@money}"
     amount_to_pay
   end
 
-  def receive_rent(rent)
-    @money += rent
-    puts "RECEIVE RENT: #{name} received $#{rent}."
+  def receive(amount, source: :generic)
+    return if amount.nil? || amount <= 0
+
+    @money += amount
+    if source == :pass_go
+      puts "GAIN MONEY AT GO: #{name} passed 'Go', gained $#{amount}. TOTAL MONEY: $#{@money}"
+      return
+    end
+
+    puts "RECEIVE: #{name} received $#{amount}. TOTAL MONEY: $#{@money}"
   end
 end
