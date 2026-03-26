@@ -1,9 +1,9 @@
-require 'rspec/autorun'
+require 'rspec'
 require_relative '../main/board'
-require_relative '../main/property'
+require_relative '../main/square/property'
 require_relative '../main/player'
-require_relative '../main/go'
-require_relative '../main/square'
+require_relative '../main/square/go'
+require_relative '../main/square/square'
 
 describe 'Board' do
   describe '[index]' do

@@ -1,4 +1,4 @@
-require_relative 'property'
+require_relative 'square/property'
 
 class Player
   attr_reader :name, :position, :is_bankrupt

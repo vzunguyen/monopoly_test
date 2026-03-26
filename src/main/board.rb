@@ -1,4 +1,4 @@
-require_relative 'property'
+require_relative 'square/property'
 class Board
   attr_reader :squares
 

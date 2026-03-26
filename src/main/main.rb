@@ -2,15 +2,15 @@
 
 require_relative 'player'
 require_relative 'board'
-require_relative 'property'
-require_relative 'square'
+require_relative 'square/property'
+require_relative 'square/square'
 require_relative 'game_event'
 require_relative 'cli_parser'
 require_relative 'game_manager'
 require_relative 'data_loader'
-require_relative 'dice'
-require_relative 'predefined_dice'
-require_relative 'go'
+require_relative 'dice/dice'
+require_relative 'dice/predefined_dice'
+require_relative 'square/go'
 
 GameEvent.new
 data_loader = DataLoader.new

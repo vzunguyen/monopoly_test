@@ -1,5 +1,5 @@
 require 'rspec/autorun'
-require_relative '../main/property'
+require_relative '../main/square/property'
 require_relative '../main/board'
 require_relative '../main/player'
 

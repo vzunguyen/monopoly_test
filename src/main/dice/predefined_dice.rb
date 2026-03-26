@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require_relative 'dice'
+# Dice that can be rolled in a predefined sequence
 class PredefinedDice < Dice
   def initialize(rolls_data: [])
+    super()
     raise ArgumentError, 'ERROR: Roll data is needed' if rolls_data.nil? || rolls_data.empty?
 
     @rolls_data = rolls_data

@@ -2,8 +2,8 @@ require 'rspec/autorun'
 require_relative '../main/game_event'
 require_relative '../main/player'
 require_relative '../main/board'
-require_relative '../main/go'
-require_relative '../main/property'
+require_relative '../main/square/go'
+require_relative '../main/square/property'
 
 describe 'GameEvent' do
   describe '#game_over_announcement' do

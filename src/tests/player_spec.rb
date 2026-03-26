@@ -1,8 +1,8 @@
 require 'rspec/autorun'
 require_relative '../main/player'
 require_relative '../main/board'
-require_relative '../main/property'
-require_relative '../main/go'
+require_relative '../main/square/property'
+require_relative '../main/square/go'
 
 describe 'Player' do
   describe '#initialize' do

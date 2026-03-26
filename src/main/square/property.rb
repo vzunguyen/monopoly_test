@@ -1,6 +1,5 @@
-require_relative 'board'
+require_relative '../board'
 require_relative 'square'
-
 class Property < Square
   attr_reader :name, :colour, :price
   attr_accessor :owner, :rent, :is_rent_doubled

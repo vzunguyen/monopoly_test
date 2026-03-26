@@ -1,5 +1,5 @@
 # frozen_string_literal: true `
-require_relative 'predefined_dice'
+require_relative 'dice/predefined_dice'
 
 class GameManager
   def initialize(board_data, players_data, dice_data)

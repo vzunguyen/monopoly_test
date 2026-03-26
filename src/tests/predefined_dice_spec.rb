@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec/autorun'
-require_relative '../main/predefined_dice'
+require_relative '../main/dice/predefined_dice'
 
 describe 'PredefinedDice' do
   it 'rolls the correct dice' do
