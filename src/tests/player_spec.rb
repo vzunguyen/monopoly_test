@@ -50,99 +50,47 @@ describe 'Player' do
     end
   end
 
-  describe '#buy_property' do
-    let(:board) { Board.new }
+  describe '#pay' do
     let(:player) { Player.new(name: 'Bob') }
-
-    it 'buys property if player has enough money' do
+    it 'if player has enough money, subtracts money from player' do
       before_payment = player.money
-      boardwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
-
-      expect(player.buy_property(boardwalk_property)).to eq(true)
-      expect(player.money).to eq(before_payment - boardwalk_property.price)
-      expect(boardwalk_property.owner).to eq(player)
+      payment = player.pay(10, true)
+      expect(player.money).to eq(before_payment - payment)
     end
 
-    it 'does not buy property if player does not have enough money' do
+    it 'if player does not have enough money and not mandatory, does not subtract money from player' do
       before_payment = player.money
-      expensive_property = Property.new(name: 'Park Place', price: 20, colour: 'dark blue')
-
-      expect(player.buy_property(expensive_property)).to eq(false)
+      payment = player.pay(18, false)
       expect(player.money).to eq(before_payment)
-      expect(expensive_property.owner).to be_nil
+    end
+
+    it 'if player does not have enough money and mandatory, subtract player money remaining and call bankrupt' do
+      payment = player.pay(18, true)
+      expect(player.money).to eq(0)
+      expect(player.is_bankrupt).to eq(true)
     end
   end
 
-  describe '#pay_rent' do
-    let(:board) { Board.new }
-    let(:owned_property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue', owner: bob) }
-    let(:other_property) { Property.new(name: 'Park Place', price: 4, colour: 'blue') }
-    let(:bob) { Player.new(name: 'Bob') }
-    let(:alice) { Player.new(name: 'Alice') }
-
-    before do
-      board.add_square(Go.new)
-      board.add_square(owned_property)
-      board.add_square(other_property)
-    end
-
-    context 'when property is owned by another player' do
-      it 'returns correct remaining money after paying rent' do
-        alice_money_before = alice.money
-        alice.pay_rent(owned_property)
-        expect(alice.money).to eq(alice_money_before - owned_property.rent), 'Player pays rent'
-      end
-
-      it 'not declares bankruptcy if player can afford rent' do
-        alice.pay_rent(owned_property)
-        expect(alice.is_bankrupt).to eq(false)
-      end
-
-      it 'declares bankruptcy if player cannot afford rent' do
-        bob.money = 40
-        alice.money = 10
-
-        expensive_property = Property.new(name: 'Park Place', price: 30, colour: 'blue')
-
-        bob.buy_property(expensive_property)
-        alice.pay_rent(expensive_property)
-
-        expect(alice.is_bankrupt).to eq(true)
-      end
-
-      context 'when is bankrupt' do
-        before do
-          bob.money = 40
-          alice.money = 10
-        end
-        it 'pays owner the rest of the remaining money' do
-          expensive_property = Property.new(name: 'Park Place', price: 30, colour: 'blue')
-
-          bob.buy_property(expensive_property)
-          amount_paid = alice.pay_rent(expensive_property)
-
-          expect(amount_paid).to eq(10)
-        end
-
-        it 'player has no money' do
-          expensive_property = Property.new(name: 'Park Place', price: 30, colour: 'blue')
-
-          bob.buy_property(expensive_property)
-          alice.pay_rent(expensive_property)
-
-          expect(alice.money).to eq(0)
-        end
-      end
-    end
-  end
-
-  describe '#receive_rent' do
-    let(:owned_property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue') }
+  describe '#receive' do
     let(:player) { Player.new(name: 'Bob') }
 
-    it 'returns correct amount of money received' do
-      player.receive_rent(owned_property.rent)
-      expect(player.money).to eq(18)
+    it 'adds money to player' do
+      before_payment = player.money
+      amount_to_add = 10
+      player.receive(10)
+      expect(player.money).to eq(before_payment + amount_to_add)
+    end
+
+    it 'does not add money to player if amount is zero, negative or nil' do
+      before_payment = player.money
+      player.receive(-10)
+      expect(player.money).to eq(before_payment)
+
+      player.receive(0)
+      expect(player.money).to eq(before_payment)
+
+      player.receive(nil)
+      expect(player.money).to eq(before_payment)
     end
   end
 end

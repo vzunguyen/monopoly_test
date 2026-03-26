@@ -120,6 +120,13 @@ describe 'Property' do
         expect(owned_property.owner).to eq(owner)
         expect(owned_property.rent).to eq(previous_owned_property_rent * 2)
       end
+
+      it 'calls pay and updates property owner if property not owned and player has enough money' do
+        allow(bob).to receive(:pay).and_call_original
+        park_property.on_land(bob, board)
+        expect(bob).to have_received(:pay).with(park_property.price, true)
+        expect(park_property.owner).to eq(bob)
+      end
     end
     context 'when handling renting payment' do
       let(:bob) { Player.new(name: 'Bob') }
@@ -128,31 +135,12 @@ describe 'Property' do
       let(:park_property) { Property.new(name: 'Park Place', price: 4, colour: 'blue') }
       let(:board) { Board.new(squares: [owned_property, park_property]) }
 
-      it 'calls buy property if property not owned and player has enough money' do
-        allow(bob).to receive(:buy_property)
-        allow(bob).to receive(:pay_rent).and_call_original
-
-        park_property.on_land(bob, board)
-        expect(bob).to have_received(:buy_property).with(park_property)
-        expect(bob).not_to have_received(:pay_rent).with(park_property)
-      end
-
-      it 'does not call buy property if property is owned' do
-        allow(bob).to receive(:buy_property)
-        allow(bob).to receive(:pay_rent).and_call_original
-
+      it 'calls pay, pays rent, and call receive if landed on owned property' do
+        allow(bob).to receive(:pay).and_call_original
+        allow(alice).to receive(:receive).and_call_original
         owned_property.on_land(bob, board)
-        expect(bob).not_to have_received(:buy_property).with(owned_property)
-        expect(bob).to have_received(:pay_rent).with(owned_property)
-      end
-
-      it 'calls pay rent if property is owned' do
-        allow(bob).to receive(:pay_rent).and_call_original
-        allow(bob).to receive(:buy_property)
-
-        owned_property.on_land(bob, board)
-        expect(bob).to have_received(:pay_rent).with(owned_property)
-        expect(bob).not_to have_received(:buy_property).with(owned_property)
+        expect(bob).to have_received(:pay).with(owned_property.rent, true)
+        expect(alice).to have_received(:receive).with(owned_property.rent, source: :rent)
       end
     end
   end
