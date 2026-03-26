@@ -8,7 +8,8 @@ require_relative 'square/go'
 require_relative 'player'
 require_relative 'dice/predefined_dice'
 
-class DataLoader
+module DataLoader
+  extend self
   def load_data_from(file_path)
     file_path = File.expand_path(file_path, __dir__)
     raise "ERROR: File not found: #{file_path}" unless File.exist?(file_path)
