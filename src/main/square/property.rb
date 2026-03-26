@@ -27,10 +27,12 @@ class Property < Square
   def on_land(current_player, board)
     return if is_owned_by?(current_player)
     if !is_owned?
-      current_player.pay(@price, true)
-      @owner = current_player
-      board.update_rent_for_monopoly(current_player, @colour)
-      puts "BUY: #{current_player.name} bought #{name} for $#{@price}."
+      if current_player.money >= @price
+        current_player.pay(@price, true)
+        @owner = current_player
+        board.update_rent_for_monopoly(current_player, @colour)
+        puts "BUY: #{current_player.name} bought #{name} for $#{@price}."
+      end
     else
       amount_paid = current_player.pay(@rent, true)
       @owner.receive(amount_paid, source: :rent)

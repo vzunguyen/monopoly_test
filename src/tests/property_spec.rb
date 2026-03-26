@@ -74,27 +74,27 @@ describe 'Property' do
 
   describe '#on_land' do
     context 'when handling buying property' do
-      let(:player) { Player.new(name: 'Bob') }
+      let(:bob) { Player.new(name: 'Bob') }
       let(:owner) { Player.new(name: 'Alice') }
       let(:property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue') }
       let(:owned_property) { Property.new(name: 'Park Place', price: 4, colour: 'blue', owner: owner) }
       let(:board) { Board.new(squares: [property, owned_property]) }
 
       it 'player buys property if property not owned' do
-        before_payment = player.money
-        property.on_land(player, board)
-        expect(player.money).to eq(before_payment - property.price)
-        expect(property.owner).to eq(player)
+        before_payment = bob.money
+        property.on_land(bob, board)
+        expect(bob.money).to eq(before_payment - property.price)
+        expect(property.owner).to eq(bob)
       end
 
       it 'player does not buy property if property already owned' do
-        owned_property.on_land(player, board)
-        expect(owned_property.owner).not_to eq(player)
+        owned_property.on_land(bob, board)
+        expect(owned_property.owner).not_to eq(bob)
       end
 
       it 'player does not buy property if player does not have enough money' do
-        player.money = 2
-        property.on_land(player, board)
+        bob.money = 2
+        property.on_land(bob, board)
         expect(property.owner).to be_nil
       end
 
@@ -123,9 +123,9 @@ describe 'Property' do
 
       it 'calls pay and updates property owner if property not owned and player has enough money' do
         allow(bob).to receive(:pay).and_call_original
-        park_property.on_land(bob, board)
-        expect(bob).to have_received(:pay).with(park_property.price, true)
-        expect(park_property.owner).to eq(bob)
+        property.on_land(bob, board)
+        expect(bob).to have_received(:pay).with(property.price, true)
+        expect(property.owner).to eq(bob)
       end
     end
     context 'when handling renting payment' do
