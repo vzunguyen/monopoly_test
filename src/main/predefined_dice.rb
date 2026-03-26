@@ -9,7 +9,10 @@ class PredefinedDice < Dice
   end
 
   def roll
-    @rolls_data.shift
+    current_roll = @rolls_data.shift
+    raise 'ERROR: Roll need to be in range 1-6' unless (1..6).cover?(current_roll)
+
+    current_roll
   end
 
   def is_end?
