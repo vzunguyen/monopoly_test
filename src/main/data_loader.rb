@@ -1,6 +1,12 @@
 # frozen_string_literal: true
-
 require 'json'
+require 'ostruct'
+require_relative 'board'
+require_relative 'square/property'
+require_relative 'square/go'
+require_relative 'player'
+require_relative 'dice/predefined_dice'
+
 class DataLoader
   def load_data_from(file_path)
     file_path = File.expand_path(file_path, __dir__)
@@ -28,9 +34,9 @@ class DataLoader
   def load_players(file_path)
     players = []
     load_data_from(file_path).each do |player_data|
-    raise ArgumentError, "ERROR: Player name can't be empty" if player_data.name.nil? || player_data.name.empty?
+      raise ArgumentError, "ERROR: Player name can't be empty" if player_data.name.nil? || player_data.name.empty?
 
-    players << Player.new(name: player_data.name)
+      players << Player.new(name: player_data.name)
     end
     players
   end

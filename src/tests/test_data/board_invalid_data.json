@@ -1,0 +1,14 @@
+[
+  {
+    "name": "GO",
+    "type": "go"
+  },
+  {
+    "name": "Chess",
+    "type": "chess"
+  },
+  {
+    "name": "Checkers",
+    "type": "checkers"
+  }
+]

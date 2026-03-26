@@ -1,101 +1,119 @@
 # frozen_string_literal: true
 
-require 'rspec/autorun'
+require 'rspec'
 require_relative '../main/game_manager'
 require_relative '../main/board'
-require_relative '../main/go'
-require_relative '../main/property'
+require_relative '../main/square/go'
+require_relative '../main/square/property'
 require_relative '../main/player'
+require_relative '../main/game_event'
 
 describe 'Game Manager' do
-  BOARD_DATA = [
-    { 'name' => 'GO', 'type' => 'go' },
-    { 'name' => 'The Burvale', 'type' => 'property', 'price' => 1, 'colour' => 'Brown' },
-    { 'name' => 'Fast Kebabs', 'type' => 'property', 'price' => 1, 'colour' => 'Brown' }
-  ]
-  PLAYERS_DATA = [
-    { 'name' => 'Bob' },
-    { 'name' => 'Alice' }
-  ]
-
   describe '#initialize' do
-    it 'initializes with board data and players data' do
-      game_manager = GameManager.new(BOARD_DATA, PLAYERS_DATA)
-      expect(game_manager.instance_variable_get(:@board_data)).to eq(BOARD_DATA)
-      expect(game_manager.instance_variable_get(:@players_data)).to eq(PLAYERS_DATA)
+    let(:board) { Board.new }
+    let(:player) { Player.new(name: 'Bob') }
+    let(:dice) { PredefinedDice.new(rolls_data: [1, 2, 3]) }
+
+    before do
+      board.add_square(Go.new)
+      board.add_square(Property.new(name: 'Boardwalk', price: 4, colour: 'blue'))
+      board.add_square(Property.new(name: 'Park Place', price: 4, colour: 'blue'))
+    end   
+    it 'initializes with board, players and dice' do
+      game_manager = GameManager.new(board, [player], dice)
+      expect(game_manager.board).to eq(board)
+      expect(game_manager.players).to eq([player])
+      expect(game_manager.dice).to eq(dice)
     end
 
     it 'raises ArgumentError if board data is nil' do
-      expect { GameManager.new(nil, PLAYERS_DATA) }.to raise_error(ArgumentError, /ERROR: Board data is needed/)
+      expect { GameManager.new(nil, [player], dice) }.to raise_error(ArgumentError, /ERROR: Board data is needed/)
     end
 
     it 'raises ArgumentError if players data is nil' do
-      expect { GameManager.new(BOARD_DATA, nil) }.to raise_error(ArgumentError, /ERROR: Players data is needed/)
+      expect {
+        GameManager.new(board, nil, dice)
+      }.to raise_error(ArgumentError, /ERROR: Players data is needed/)
     end
 
-    it 'raises ArgumentError if board data is empty' do
-      expect { GameManager.new([], PLAYERS_DATA) }.to raise_error(ArgumentError, /ERROR: Board data is needed/)
+    it 'raises ArgumentError if dice data is nil' do
+      expect {
+        GameManager.new(board, [player], nil)
+      }.to raise_error(ArgumentError, /ERROR: Dice data is needed/)
     end
 
     it 'raises ArgumentError if players data is empty' do
-      expect { GameManager.new(BOARD_DATA, []) }.to raise_error(ArgumentError, /ERROR: Players data is needed/)
+      expect {
+        GameManager.new(board, [], dice)
+      }.to raise_error(ArgumentError, /ERROR: Players data is needed/)
     end
   end
 
-  describe '#load_board' do
-    let(:game_manager) { GameManager.new(BOARD_DATA, PLAYERS_DATA) }
+  describe '#gain_money_passing_go' do
+    let(:board) { Board.new }
+    let(:player) { Player.new(name: 'Bob') }
+    let(:dice) { PredefinedDice.new(rolls_data: [1, 2, 3]) }
+    let(:game_manager) { GameManager.new(board, [player], dice) }
 
     before do
-      @board = game_manager.load_board
-    end
-    it 'loads board data into a Board object' do
-      expect(@board).to be_a(Board)
-    end
-
-    it 'loads correct square Go type' do
-      expect(@board.squares[0]).to be_a(Go)
+      board.add_square(Go.new)
+      board.add_square(Property.new(name: 'Boardwalk', price: 4, colour: 'blue'))
+      board.add_square(Property.new(name: 'Park Place', price: 4, colour: 'blue'))
     end
 
-    it 'loads correct square Property type' do
-      expect(@board.squares[1]).to be_a(Property)
-      expect(@board.squares[2]).to be_a(Property)
+    it 'adds $1 if player passes go once' do
+      money_passed_go = player.move(board.length, board)
+      expect(money_passed_go).to eq(1)
+
+      game_manager.gain_money_passing_go(player, money_passed_go)
+      expect(player.money).to eq(17)
     end
 
-    it 'raises error if there is invalid type in board data' do
-      invalid_board_data = [
-        { 'name' => 'GO', 'type' => 'invalid' },
-        { 'name' => 'The Burvale', 'type' => 'property', 'price' => 1, 'colour' => 'Brown' },
-        { 'name' => 'Fast Kebabs', 'type' => 'property', 'price' => 1, 'colour' => 'Brown' }
-      ]
+    it 'adds $2 if player passes go 2 times' do
+      money_passed_go = player.move(board.length * 2, board)
+      expect(money_passed_go).to eq(2)
 
-      invalid_game_manager = GameManager.new(invalid_board_data, PLAYERS_DATA)
-      expect { invalid_game_manager.load_board }.to raise_error(RuntimeError, /ERROR: Invalid square type/)
+      game_manager.gain_money_passing_go(player, money_passed_go)
+      expect(player.money).to eq(18)
+    end
+
+    it 'gained correct amount despite multiple moves' do
+      money_passed_go = player.move(board.length, board)
+      expect(money_passed_go).to eq(1)
+      game_manager.gain_money_passing_go(player, money_passed_go)
+
+      money_passed_go = player.move(board.length, board)
+      expect(money_passed_go).to eq(1)
+      game_manager.gain_money_passing_go(player, money_passed_go)
+
+      expect(player.money).to eq(18)
     end
   end
 
-  describe '#load_players' do
-    let(:game_manager) { GameManager.new(BOARD_DATA, PLAYERS_DATA) }
-    let(:players) { game_manager.load_players }
+  describe '#game_is_over?' do
+    let(:board) { Board.new }
+    let(:dice) { PredefinedDice.new(rolls_data: [1, 2, 3]) }
+    let(:player) { Player.new(name: 'Bob') }
+    let(:game_manager) { GameManager.new(board, [player], dice) }
 
-    it 'loads players data into a Player object' do
-      expect(players.first).to be_a(Player)
+    before do
+      board.add_square(Go.new)
+      board.add_square(Property.new(name: 'Boardwalk', price: 4, colour: 'blue'))
+      board.add_square(Property.new(name: 'Park Place', price: 4, colour: 'blue'))
     end
 
-    it 'raises error if there is invalid type in players data' do
-      invalid_players_data = [
-        { 'name' => 'Bob' },
-        { 'name' => 'Alice', 'type' => 'invalid' }
-      ]
+    it 'returns true if player is bankrupt' do
+      allow(player).to receive(:is_bankrupt).and_return(true)
 
-      invalid_game_manager = GameManager.new(BOARD_DATA, invalid_players_data)
-      expect { invalid_game_manager.load_players }.to raise_error(RuntimeError, /ERROR: Wrong player data format/)
+      expect(game_manager.game_is_over(player, dice)).to eq(true)
     end
 
-    it 'raises error if there is no name in players data' do
-      [
-        { 'name' => nil },
-        { 'name' => 'Alice' }
-      ]
+    it 'returns true if dice is end' do
+      allow(dice).to receive(:is_end?).and_return(true)
+    end
+
+    it 'returns false if player is not bankrupt and dice is not end' do
+      expect(game_manager.game_is_over(player, dice)).to eq(false)
     end
   end
 end

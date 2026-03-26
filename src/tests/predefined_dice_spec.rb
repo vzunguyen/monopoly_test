@@ -51,6 +51,6 @@ describe 'PredefinedDice' do
       expect(dice.roll).to eq(2)
 
       expect(dice.is_end?).to eq(false)
-      end
+    end
   end
 end
