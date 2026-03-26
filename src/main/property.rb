@@ -34,7 +34,11 @@ class Property < Square
 
     # PAY RENT
     return unless is_owned? && !is_owned_by?(current_player)
+
     amount_paid = current_player.pay_rent(self)
     @owner.receive_rent(amount_paid)
+
+    # REMAINING MONEY
+    puts "REMAINING MONEY: $#{current_player.money}"
   end
 end
