@@ -8,7 +8,6 @@ class Square
   end
   protected :initialize
 
-  # TODO: Have a method for landing square - default nothing - if type property -> behaviours.
   def on_land(player, board)
     # Default
   end
