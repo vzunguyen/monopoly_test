@@ -1,4 +1,4 @@
-# frozen_string_literal: true `
+# frozen_string_literal: true
 require_relative 'dice/predefined_dice'
 
 # Manages the game logic
@@ -24,7 +24,7 @@ class GameManager
 
       steps = dice.roll
       passed_go_count = current_player.move(steps, board)
-      gain_money_passing_go(current_player, passed_go_count)
+      current_player.receive(passed_go_count, source: :pass_go)
 
       current_square = board[current_player.position]
       current_square.on_land(current_player, board)
@@ -41,12 +41,5 @@ class GameManager
       return true
     end
     dice.is_end?
-  end
-
-  def gain_money_passing_go(player, passed_go_count)
-    return if passed_go_count.nil? || passed_go_count.zero?
-
-    player.money += passed_go_count
-    puts "GAIN MONEY AT GO: #{player.name} passed 'Go, gained $#{passed_go_count}. Total money: $#{player.money}"
   end
 end
