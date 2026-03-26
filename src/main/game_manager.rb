@@ -4,19 +4,21 @@ require_relative 'dice/predefined_dice'
 # Manages the game logic
 class GameManager
   attr_reader :board, :players, :dice
+
   def initialize(board, players, dice)
     raise ArgumentError, 'ERROR: Board data is needed' if board.nil?
     raise ArgumentError, 'ERROR: Players data is needed' if players.nil? || players.empty?
     raise ArgumentError, 'ERROR: Dice data is needed' if dice.nil?
+
     @board = board
     @players = players
     @dice = dice
   end
 
   def play
-    index = 0
+    player_turn_index = 0
     loop do
-      current_player = players[index % players.length]
+      current_player = players[player_turn_index % players.length]
 
       puts "\n--- TURN #{current_player.name} ---"
 
@@ -28,7 +30,7 @@ class GameManager
       current_square.on_land(current_player, board)
       break if game_is_over(current_player, dice)
 
-      index += 1
+      player_turn_index += 1
     end
     players
   end
@@ -38,9 +40,7 @@ class GameManager
       puts "BANKRUPT: #{player.name} is bankrupt. Game over."
       return true
     end
-    return true if dice.is_end?
-
-    false
+    dice.is_end?
   end
 
   def gain_money_passing_go(player, passed_go_count)

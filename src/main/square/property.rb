@@ -25,15 +25,16 @@ class Property < Square
   end
 
   def on_land(current_player, board)
+    return if is_owned_by?(current_player)
+
     # BUY PROPERTY
     unless is_owned?
       current_player.buy_property(self)
       board.update_rent_for_monopoly(current_player, @colour)
+      return
     end
 
     # PAY RENT
-    return unless is_owned? && !is_owned_by?(current_player)
-
     amount_paid = current_player.pay_rent(self)
     @owner.receive_rent(amount_paid)
 

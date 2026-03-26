@@ -14,7 +14,7 @@ class Player
   def move(steps, board)
     times_passed_go, @position = (@position + steps).divmod(board.length)
     puts "MOVE: #{name} moved #{steps} steps to position #{@position} (#{board[@position].name})"
-    times_passed_go if times_passed_go > 0
+    times_passed_go
   end
 
   def buy_property(property)

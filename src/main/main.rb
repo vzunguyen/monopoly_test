@@ -4,7 +4,7 @@ require_relative 'player'
 require_relative 'board'
 require_relative 'square/property'
 require_relative 'square/square'
-require_relative 'game_event'
+require_relative 'game_logger'
 require_relative 'cli_parser'
 require_relative 'game_manager'
 require_relative 'data_loader'
@@ -12,7 +12,6 @@ require_relative 'dice/dice'
 require_relative 'dice/predefined_dice'
 require_relative 'square/go'
 
-game_event = GameEvent.new
 data_loader = DataLoader.new
 opts = CLIParser.new.parse(ARGV)
 
@@ -24,4 +23,4 @@ game_manager = GameManager.new(board, players, dice)
 
 players = game_manager.play
 
-game_event.game_over_announcement(players, board)
+GameLogger.game_over_announcement(players, board)

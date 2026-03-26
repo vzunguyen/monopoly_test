@@ -1,4 +1,5 @@
-class GameEvent
+module GameLogger
+  extend self
   def print_winner(players)
     winner = players.max_by(&:money)
     puts "WINNER: #{winner.name} with $#{winner.money}"
