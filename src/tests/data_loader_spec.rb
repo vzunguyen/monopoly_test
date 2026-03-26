@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative '../main/data_loader'
 
 describe 'Data Loader' do

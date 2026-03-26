@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+
 require 'json'
 class DataLoader
-
   def load_data_from(file_path)
     file_path = File.expand_path(file_path, __dir__)
     data = JSON.parse(File.read(file_path))
@@ -11,4 +11,3 @@ class DataLoader
     data
   end
 end
-

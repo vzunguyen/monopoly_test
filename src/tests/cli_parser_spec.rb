@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative '../main/cli_parser'
 describe 'CLI Parser' do
   let(:cli_parser) { CLIParser.new }
@@ -20,4 +21,3 @@ describe 'CLI Parser' do
     end
   end
 end
-

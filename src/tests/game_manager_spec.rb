@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rspec/autorun'
 require_relative '../main/game_manager'
 require_relative '../main/board'
@@ -8,13 +9,13 @@ require_relative '../main/player'
 
 describe 'Game Manager' do
   BOARD_DATA = [
-    { "name" => "GO", "type" => "go" },
-    { "name" => "The Burvale", "type" => "property", "price" => 1, "colour" => "Brown" },
-    { "name" => "Fast Kebabs", "type" => "property", "price" => 1, "colour" => "Brown" }
+    { 'name' => 'GO', 'type' => 'go' },
+    { 'name' => 'The Burvale', 'type' => 'property', 'price' => 1, 'colour' => 'Brown' },
+    { 'name' => 'Fast Kebabs', 'type' => 'property', 'price' => 1, 'colour' => 'Brown' }
   ]
   PLAYERS_DATA = [
-    { "name" => "Bob" },
-    { "name" => "Alice" }
+    { 'name' => 'Bob' },
+    { 'name' => 'Alice' }
   ]
 
   describe '#initialize' do
@@ -62,9 +63,9 @@ describe 'Game Manager' do
 
     it 'raises error if there is invalid type in board data' do
       invalid_board_data = [
-        { "name" => "GO", "type" => "invalid" },
-        { "name" => "The Burvale", "type" => "property", "price" => 1, "colour" => "Brown" },
-        { "name" => "Fast Kebabs", "type" => "property", "price" => 1, "colour" => "Brown" }
+        { 'name' => 'GO', 'type' => 'invalid' },
+        { 'name' => 'The Burvale', 'type' => 'property', 'price' => 1, 'colour' => 'Brown' },
+        { 'name' => 'Fast Kebabs', 'type' => 'property', 'price' => 1, 'colour' => 'Brown' }
       ]
 
       invalid_game_manager = GameManager.new(invalid_board_data, PLAYERS_DATA)
@@ -82,8 +83,8 @@ describe 'Game Manager' do
 
     it 'raises error if there is invalid type in players data' do
       invalid_players_data = [
-        { "name" => "Bob" },
-        { "name" => "Alice", "type" => "invalid" }
+        { 'name' => 'Bob' },
+        { 'name' => 'Alice', 'type' => 'invalid' }
       ]
 
       invalid_game_manager = GameManager.new(BOARD_DATA, invalid_players_data)
@@ -91,10 +92,10 @@ describe 'Game Manager' do
     end
 
     it 'raises error if there is no name in players data' do
-      invalid_players_data = [
-        { "name" => nil },
-        { "name" => "Alice" }
+      [
+        { 'name' => nil },
+        { 'name' => 'Alice' }
       ]
-      end
+    end
   end
 end
