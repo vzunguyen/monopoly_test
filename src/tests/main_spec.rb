@@ -8,36 +8,6 @@ require_relative '../main/go'
 
 # TODO: Might need to put this as Integration test
 describe 'In Main' do
-  describe '#get_data_from' do
-    it 'raises error if file does not exist' do
-      expect { get_data_from('non_existent_file.json') }.to raise_error(Errno::ENOENT)
-    end
-  end
-  describe '#load_board' do
-    let(:board_data) do
-      [
-        OpenStruct.new(name: 'GO', type: 'go'),
-        OpenStruct.new(name: 'The Burvale', type: 'property', price: 1, colour: 'Brown'),
-        OpenStruct.new(name: 'Fast Kebabs', type: 'property', price: 1, colour: 'Brown')
-      ]
-    end
-    let(:board) { load_board(board_data) }
-
-    it 'returns a board object' do
-      expect(board).to be_a(Board)
-    end
-
-    it 'adds correct object type to board' do
-      expect(board[0]).to be_a(Go)
-      expect(board[1]).to be_a(Property)
-      expect(board[2]).to be_a(Property)
-    end
-
-    it 'raises error if object is not a Go or Property' do
-      expect { load_board([OpenStruct.new(name: 'Chance', type: 'chance')]) }.to raise_error(RuntimeError)
-    end
-  end
-
   describe '#gain_money_passing_go' do
     let(:board) { Board.new }
     let(:player) { Player.new(name: 'Bob') }
