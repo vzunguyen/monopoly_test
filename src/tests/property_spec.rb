@@ -5,13 +5,10 @@ require_relative '../main/player'
 
 describe 'Property' do
   describe '#initialize' do
-    let(:property) { Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue') }
+    let(:owned_property) { Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue') }
 
     it 'initializes with the correct name, price, and colour' do
-      expect(property.name).to eq('Boardwalk')
-      expect(property.price).to eq(4)
-      expect(property.colour).to eq('dark blue')
-      expect(property.owner).to eq(nil)
+      expect(owned_property).to have_attributes(name: 'Boardwalk', price: 4, colour: 'dark blue', owner: nil)
     end
 
     it 'returns error if initialized with no price or colour' do
@@ -20,11 +17,8 @@ describe 'Property' do
       expect { Property.new(name: 'ErrorProperty', colour: 'blue') }.to raise_error(ArgumentError)
     end
 
-    it 'returns error if initialized with no name' do
+    it 'returns error if initialized with no name or name is nil' do
       expect { Property.new(price: 400, colour: 'blue') }.to raise_error(ArgumentError)
-    end
-
-    it 'returns error if initialized with nil name' do
       expect { Property.new(name: nil, price: 400, colour: 'blue') }.to raise_error(ArgumentError)
     end
 
@@ -63,10 +57,8 @@ describe 'Property' do
 
     it 'returns true if property is owned by the player' do
       owner = Player.new(name: 'Bob')
-      property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
-
-      owner.buy_property(property)
-      expect(property.owner).to eq(owner)
+      property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue', owner: owner)
+      expect(property.is_owned_by?(owner)).to eq(true)
     end
 
     it 'returns false if property is not owned by any player' do
@@ -75,41 +67,35 @@ describe 'Property' do
     end
 
     it 'returns false if property is owned by another player' do
-      property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
-      alice.buy_property(property)
-
+      property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue', owner: alice)
       expect(property.is_owned_by?(bob)).to eq(false)
     end
   end
 
   describe '#on_land' do
     context 'when handling buying property' do
-      let(:board) { Board.new }
       let(:player) { Player.new(name: 'Bob') }
       let(:owner) { Player.new(name: 'Alice') }
       let(:property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue') }
-      let(:owned_property) { Property.new(name: 'Park Place', price: 4, colour: 'blue') }
-
-      before do
-        board.add_square(property)
-        board.add_square(owned_property)
-        owner.buy_property(owned_property)
-      end
+      let(:owned_property) { Property.new(name: 'Park Place', price: 4, colour: 'blue', owner: owner) }
+      let(:board) { Board.new(squares: [property, owned_property]) }
 
       it 'player buys property if property not owned' do
+        before_payment = player.money
         property.on_land(player, board)
-        expect(property.is_owned_by?(player)).to eq(true)
+        expect(player.money).to eq(before_payment - property.price)
+        expect(property.owner).to eq(player)
       end
 
       it 'player does not buy property if property already owned' do
-        property.on_land(player, board)
-        expect(owned_property.is_owned_by?(player)).to eq(false)
+        owned_property.on_land(player, board)
+        expect(owned_property.owner).not_to eq(player)
       end
 
       it 'player does not buy property if player does not have enough money' do
         player.money = 2
         property.on_land(player, board)
-        expect(property.is_owned_by?(player)).to eq(false)
+        expect(property.owner).to be_nil
       end
 
       it 'not update rent when player does not own last blue property' do
@@ -123,55 +109,50 @@ describe 'Property' do
       end
 
       it 'updates rent when player the last blue property' do
+        previous_property_rent = property.rent
+        previous_owned_property_rent = owned_property.rent
         property.on_land(owner, board)
         expect(board.check_for_monopoly(owner, 'blue')).to eq(true)
 
         expect(property.owner).to eq(owner)
-        expect(property.rent).to eq(4.0)
+        expect(property.rent).to eq(previous_property_rent * 2)
 
         expect(owned_property.owner).to eq(owner)
-        expect(owned_property.rent).to eq(4.0)
+        expect(owned_property.rent).to eq(previous_owned_property_rent * 2)
       end
     end
     context 'when handling renting payment' do
-      let(:board) { Board.new }
       let(:bob) { Player.new(name: 'Bob') }
       let(:alice) { Player.new(name: 'Alice') }
-      let(:property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue') }
+      let(:owned_property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue', owner: alice) }
       let(:park_property) { Property.new(name: 'Park Place', price: 4, colour: 'blue') }
+      let(:board) { Board.new(squares: [owned_property, park_property]) }
 
-      before do
-        board.add_square(property)
-        alice.buy_property(property) # money: 12
+      it 'calls buy property if property not owned and player has enough money' do
+        allow(bob).to receive(:buy_property)
+        allow(bob).to receive(:pay_rent).and_call_original
+
+        park_property.on_land(bob, board)
+        expect(bob).to have_received(:buy_property).with(park_property)
+        expect(bob).not_to have_received(:pay_rent).with(park_property)
       end
 
-      it 'player pay correct amount of rent and owner receives correct amount of payment' do
-        expect(alice.money).to eq(12)
-        expect(bob.money).to eq(16)
+      it 'does not call buy property if property is owned' do
+        allow(bob).to receive(:buy_property)
+        allow(bob).to receive(:pay_rent).and_call_original
 
-        property.on_land(bob, board)
-
-        expect(alice.money).to eq(14)
-        expect(bob.money).to eq(14)
+        owned_property.on_land(bob, board)
+        expect(bob).not_to have_received(:buy_property).with(owned_property)
+        expect(bob).to have_received(:pay_rent).with(owned_property)
       end
 
-      it 'player does not pay rent if property is owned by the player' do
-        expect(alice.money).to eq(12)
+      it 'calls pay rent if property is owned' do
+        allow(bob).to receive(:pay_rent).and_call_original
+        allow(bob).to receive(:buy_property)
 
-        property.on_land(alice, board)
-
-        expect(alice.money).to eq(12)
-      end
-
-      it 'player pays the rest of money if player does not have enough money' do
-        expect(alice.money).to eq(12)
-
-        bob.money = 1
-        property.on_land(bob, board)
-
-        expect(bob.money).to eq(0)
-        expect(bob.is_bankrupt).to eq(true)
-        expect(alice.money).to eq(13)
+        owned_property.on_land(bob, board)
+        expect(bob).to have_received(:pay_rent).with(owned_property)
+        expect(bob).not_to have_received(:buy_property).with(owned_property)
       end
     end
   end

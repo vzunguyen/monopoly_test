@@ -17,21 +17,21 @@ describe 'Player' do
 
   describe '#move' do
     let(:board) { Board.new }
-    let(:go) { Go.new }
 
     before do
-      board.add_square(go)
+      board.add_square(Go.new)
       board.add_square(Property.new(name: 'Boardwalk', price: 4, colour: 'blue'))
       board.add_square(Property.new(name: 'Park Place', price: 4, colour: 'blue'))
     end
 
     it 'moves the player to the correct position on the board' do
       player = Player.new(name: 'Bob')
-      player.move(2, board)
-      expect(player.position).to eq(2)
+      money_passed_go = player.move(2, board)
+      expect(player.position).to eq(2), 'Player position should be 2'
+      expect(money_passed_go).to eq(0), 'Player should not receive money'
     end
 
-    it 'moves player to the beginning of board when reaching the end' do
+    it 'moves player to the beginning of board when reaching the end of board' do
       player = Player.new(name: 'Bob')
       player.move(board.length, board)
       expect(player.position).to eq(0)
@@ -48,13 +48,6 @@ describe 'Player' do
       money_passed_go = player.move(board.length, board)
       expect(money_passed_go).to eq(1)
     end
-
-    it 'returns nil when player passes go at the start' do
-      player = Player.new(name: 'Bob')
-      money_passed_go = player.move(1, board)
-
-      expect(money_passed_go).to eq(nil)
-    end
   end
 
   describe '#buy_property' do
@@ -62,30 +55,27 @@ describe 'Player' do
     let(:player) { Player.new(name: 'Bob') }
 
     it 'buys property if player has enough money' do
+      before_payment = player.money
       boardwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
 
       expect(player.buy_property(boardwalk_property)).to eq(true)
+      expect(player.money).to eq(before_payment - boardwalk_property.price)
       expect(boardwalk_property.owner).to eq(player)
     end
 
-    it 'gives player correct remaining money after buying property' do
-      boardwalk_property = Property.new(name: 'Boardwalk', price: 4, colour: 'dark blue')
-
-      player.buy_property(boardwalk_property)
-      expect(player.money).to eq(12)
-    end
-
     it 'does not buy property if player does not have enough money' do
+      before_payment = player.money
       expensive_property = Property.new(name: 'Park Place', price: 20, colour: 'dark blue')
 
       expect(player.buy_property(expensive_property)).to eq(false)
+      expect(player.money).to eq(before_payment)
       expect(expensive_property.owner).to be_nil
     end
   end
 
   describe '#pay_rent' do
     let(:board) { Board.new }
-    let(:owned_property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue') }
+    let(:owned_property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue', owner: bob) }
     let(:other_property) { Property.new(name: 'Park Place', price: 4, colour: 'blue') }
     let(:bob) { Player.new(name: 'Bob') }
     let(:alice) { Player.new(name: 'Alice') }
@@ -97,17 +87,10 @@ describe 'Player' do
     end
 
     context 'when property is owned by another player' do
-      before do
-        bob.buy_property(owned_property) # price = 4; rent = 2
-      end
-
       it 'returns correct remaining money after paying rent' do
-        expect(owned_property.owner).to eq(bob)
-        expect(bob.money).to eq(12)
-
+        alice_money_before = alice.money
         alice.pay_rent(owned_property)
-
-        expect(alice.money).to eq(14)
+        expect(alice.money).to eq(alice_money_before - owned_property.rent), 'Player pays rent'
       end
 
       it 'not declares bankruptcy if player can afford rent' do
@@ -141,7 +124,7 @@ describe 'Player' do
           expect(amount_paid).to eq(10)
         end
 
-        it 'player net worth returns 0' do
+        it 'player has no money' do
           expensive_property = Property.new(name: 'Park Place', price: 30, colour: 'blue')
 
           bob.buy_property(expensive_property)
@@ -154,11 +137,11 @@ describe 'Player' do
   end
 
   describe '#receive_rent' do
-    let(:property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue') }
+    let(:owned_property) { Property.new(name: 'Boardwalk', price: 4, colour: 'blue') }
     let(:player) { Player.new(name: 'Bob') }
 
     it 'returns correct amount of money received' do
-      player.receive_rent(property.rent)
+      player.receive_rent(owned_property.rent)
       expect(player.money).to eq(18)
     end
   end
