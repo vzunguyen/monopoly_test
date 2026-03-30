@@ -18,7 +18,6 @@
 | `src/main/square/square.rb`        | File      | Base `Square` abstraction shared by board squares.                        |
 | `src/main/square/go.rb`            | File      | `Go` square behavior.                                                     |
 | `src/main/square/property.rb`      | File      | `Property` square: ownership, rent, and on-land behavior.                 |
-| `src/main/game_event.rb`           | File      | End-of-game and reporting helpers (winner, positions, net worth).         |
 | `src/tests/`                       | Directory | RSpec test suite for main game classes and flows.                         |
 | `src/tests/test_data/`             | Directory | JSON fixtures used by loader and validation specs.                        |
 | `vendor/`                          | Directory | Project-local bundled gems installed via Bundler.                         |
@@ -32,11 +31,11 @@
 
 # Design Assumptions and Constraints
 
-1. Player will not buy property when player does not have enough money.
+1. Player will not buy property when a player does not have enough money.
 2. Players only go bankrupt when their money go under 0.
 3. Rent price is different to property price: For this, I decided that rent price should be 50% property price as any prices under will make the rent too low for bankruptcy event to happen.
 4. Dice rolls are not randomized, and only 1-6 roll values are possible.
-5. If player is going bankrupt, give the owner the remaining money of the player, and the player will have 0 money left.
+5. If a player is going bankrupt, give the owner the remaining money of the player, and the player will have 0 money left.
 6. GO will always be at the start of the board.
 
 # How to run this application?
@@ -60,8 +59,8 @@
 
 Several changes were made to this feature of the project, I will list them out according to when the change was made.
 1. First, I considered to check monopoly whenever a player landed on a property. However, I found that this approach is not optimal as it will check for monopoly for all properties in the monopoly.
-2. Then, I decided to check monopoly only when player buys property. However, I found that this approach will cause data integrity issues as we might miss out on the case where player already has a monopoly and buy another property of the same colour.
-3. Finally, after some reconsideration, I decided to have on land method in Property class that will triggers player behabivours happening when landing on the square. If player is buying property, then I check for monopoly and update the price of the property. I believe this approach will allow if there is any other new behaviour happening on landing the square, I can just add it to the property class.
+2. Then, I decided to check monopoly only when player buys property. However, I found that this approach will cause data integrity issues as we might miss out on the case where a player already has a monopoly and buy another property of the same colour.
+3. Finally, after some reconsideration, I decided to have on land method in Property class that will trigger player behaviours happening when landing on the square. If a player is buying property, then I check for monopoly and update the price of the property. I believe this approach will allow if there is any other new behaviour happening on landing the square, I can just add it to the property class.
 
 ## Rent price: From the same value to price to creating a new attribute
 
